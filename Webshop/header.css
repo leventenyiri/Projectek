@@ -1,0 +1,192 @@
+body {
+    background-color: #f5f5dc;
+    font-family: 'Georgia', serif;
+    
+    
+    background-image: url('https://cdn.shopify.com/s/files/1/1570/1879/collections/SPICES_2_2000x.png?v=1605208965') !important;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    
+}
+
+.navbar {
+    background-color: #ca5d09c7 !important;
+    border-bottom: 3px solid #d2691e;
+}
+
+.navbar-brand {
+    color: #f8f8ff !important;
+}
+
+.footer {
+    background-color: #8b4513;
+    border-top: 3px solid #d2691e;
+    color: #f8f8ff;
+    padding: 20px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.container .row .nav-link {
+    color: rgb(196, 48, 3);
+    transition: color 0.3s ease; 
+}
+
+.jumbotron {
+    background: rgba(255, 255, 255, 0.3) !important;
+}
+
+.container {
+    background: transparent !important;
+}
+
+.text-dark-green {
+    color: #006400;
+}
+
+.row:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.row:nth-child(odd) {
+    background-color:rgba(255, 255, 255, 0.4);
+}
+
+.centered-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 60px); 
+    margin: 0;
+}
+
+.centered-content2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 70px); 
+    margin: 0;
+    background-color: transparent !important;
+}
+
+.centered-container {
+    border-radius: 25px;
+    padding: 20px;
+    width: 25%; 
+    background-color: #f2f2f2;
+    box-shadow: 0px 3px 15px rgba(0,0,0,0.2); 
+}
+
+.centered-container2 {
+    border-radius: 25px;
+    padding: 20px;
+    width: 35%; 
+    background-color: transparent !important;
+    box-shadow: 0px 3px 15px rgba(0,0,0,0.2); 
+}
+
+.centered-row {
+    justify-content: center;
+    align-items: center;
+    height: 50px; 
+}
+
+.nav-link {
+    font-size: 20px; 
+    padding: 10px 15px; 
+    border-radius: 15px; 
+    color: black ;
+    transition: color 0.3s ease; 
+}
+
+.nav-link:hover {
+    color: white; 
+    text-decoration: none; 
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.1); 
+}
+
+.centered-container .nav-link {
+    color: rgb(196, 48, 3);
+    transition: color 1s ease; 
+}
+
+.centered-container .nav-link:hover {
+    color: rgb(239, 130, 97);
+    box-shadow: none !important;
+}
+
+.centered-container2 .nav-link {
+    color: rgb(196, 48, 3);
+    transition: color 1s ease; 
+}
+
+.centered-container2 .nav-link:hover {
+    color: rgb(239, 130, 97);
+    box-shadow: none !important;
+}
+
+.form-group, .mt-5 {
+    color: #006400 !important;
+}
+
+.btn-primary.custom-button {
+    background-color: #006400  !important;
+    border-color: #006400 ;
+}
+
+.form-container {
+    width: 50%;
+}
+
+form {
+    color: #006400 !important;
+}
+
+.message {
+        font-size: 24px;
+        text-align: center;
+        color: rgb(196, 48, 3);
+        margin-top: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 20vh;
+    }
+
+.darab-input {
+        width: 50px;
+}
+
+.centered-table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.black-text {
+    color: #000000;
+    font-weight: bold;
+}
+
+.centered-table tbody td {
+    font-weight: bold;
+} /* kosar.php-ban valamiert ez is kell, hogy vastag legyen, valszeg a black-text-et valami felülírja */
+
+.col-lg-8, .col-lg-4 {
+    padding: 0px;
+}
+table {
+    width: 100%;
+}
+
+.rendelesszoveg {
+    font-size: medium;
+}
+
+.centered-form {
+    max-width: 80%; 
+    margin: auto; 
+}

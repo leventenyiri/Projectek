@@ -1,0 +1,20 @@
+﻿  Moving_Station.cpp
+C:\C++\Nagyhazi-tomorites-uj\ULYHQH_Nagyhazi_TMC\Time.h(42,10): warning C4244: 'return': conversion from 'double' to 'unsigned int', possible loss of data
+C:\C++\Nagyhazi-tomorites-uj\ULYHQH_Nagyhazi_TMC\Moving_Station.h(30,9): warning C4804: '<=': unsafe use of type 'bool' in operation
+C:\C++\Nagyhazi-tomorites-uj\ULYHQH_Nagyhazi_TMC\Moving_Station.h(30,11): warning C4804: '<=': unsafe use of type 'bool' in operation
+C:\C++\Nagyhazi-tomorites-uj\ULYHQH_Nagyhazi_TMC\Moving_Station.cpp(20,23): warning C4018: '<': signed/unsigned mismatch
+  Station.cpp
+C:\C++\Nagyhazi-tomorites-uj\ULYHQH_Nagyhazi_TMC\Station.cpp(24,23): warning C4018: '<': signed/unsigned mismatch
+  TMC_Test.cpp
+C:\C++\Nagyhazi-tomorites-uj\ULYHQH_Nagyhazi_TMC\Time.h(42,10): warning C4244: 'return': conversion from 'double' to 'unsigned int', possible loss of data
+C:\C++\Nagyhazi-tomorites-uj\ULYHQH_Nagyhazi_TMC\Moving_Station.h(30,9): warning C4804: '<=': unsafe use of type 'bool' in operation
+C:\C++\Nagyhazi-tomorites-uj\ULYHQH_Nagyhazi_TMC\Moving_Station.h(30,11): warning C4804: '<=': unsafe use of type 'bool' in operation
+C:\C++\Nagyhazi-tomorites-uj\ULYHQH_Nagyhazi_TMC\TMC_Test.cpp(14,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Vector.cpp
+  Vehicle.cpp
+  Vehicles.cpp
+  Velocity.cpp
+  Generating Code...
+  Time.cpp
+C:\C++\Nagyhazi-tomorites-uj\ULYHQH_Nagyhazi_TMC\Time.h(42,10): warning C4244: 'return': conversion from 'double' to 'unsigned int', possible loss of data
+  Nagyházi - TMC.vcxproj -> C:\C++\Nagyhazi-tomorites-uj\ULYHQH_Nagyhazi_TMC\Debug\Nagyházi - TMC.exe

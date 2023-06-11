@@ -1,0 +1,6 @@
+C:\C++\Nagyhazi-tomorites-uj\ULYHQH_Nagyhazi_TMC\Debug\Nagyházi - TMC.exe
+C:\C++\Nagyhazi-tomorites-uj\ULYHQH_Nagyhazi_TMC\Debug\Nagyházi - TMC.pdb
+C:\C33 hazi\ULYHQH_Nagyhazi_TMC\Debug\Nagyházi - TMC.exe
+C:\C33 hazi\ULYHQH_Nagyhazi_TMC\Debug\Nagyházi - TMC.pdb
+C:\C33 hazi\TMC\Debug\Nagyházi - TMC.exe
+C:\C33 hazi\TMC\Debug\Nagyházi - TMC.pdb
