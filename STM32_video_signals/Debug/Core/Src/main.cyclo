@@ -1,0 +1,13 @@
+../Core/Src/main.c:83:7:generateTestPattern	14
+../Core/Src/main.c:105:7:LoadCLUTForGrayscale	6
+../Core/Src/main.c:134:7:VerifyCLUTEntry	2
+../Core/Src/main.c:144:7:testGenerator	3
+../Core/Src/main.c:157:6:_write	1
+../Core/Src/main.c:170:5:main	4
+../Core/Src/main.c:255:6:SystemClock_Config	4
+../Core/Src/main.c:314:13:MX_I2C4_Init	4
+../Core/Src/main.c:362:13:MX_LTDC_Init	3
+../Core/Src/main.c:424:13:MX_USART3_UART_Init	5
+../Core/Src/main.c:472:13:MX_USB_OTG_FS_PCD_Init	2
+../Core/Src/main.c:508:13:MX_GPIO_Init	1
+../Core/Src/main.c:579:6:Error_Handler	1
