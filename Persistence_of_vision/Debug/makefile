@@ -62,7 +62,7 @@ main-build: Persistence_of_vision.elf secondary-outputs
 
 # Tool invocations
 Persistence_of_vision.elf Persistence_of_vision.map: $(OBJS) $(USER_OBJS) C:\Users\nyiri\STM32CubeIDE\workspace_1.14.1\Persistence_of_vision\STM32F446RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Persistence_of_vision.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\nyiri\STM32CubeIDE\workspace_1.14.1\Persistence_of_vision\STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Persistence_of_vision.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "Persistence_of_vision.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\nyiri\STM32CubeIDE\workspace_1.14.1\Persistence_of_vision\STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Persistence_of_vision.map" -Wl,--gc-sections -static -u _printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

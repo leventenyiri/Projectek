@@ -24,6 +24,8 @@
 #include "lsm6dsl.h"
 #include <stdio.h>
 #include "stm32f4xx_nucleo_bus.h"
+#include "ASCII.h"
+#include <stdlib.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -33,6 +35,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
+#define red 5
+#define green 10
 
 /* USER CODE END PD */
 
@@ -44,11 +49,91 @@
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef hspi2;
 
+TIM_HandleTypeDef htim2;
+
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 LSM6DSL_Object_t MotionSensor;
 volatile uint32_t dataRdyIntReceived;
+
+typedef struct {
+    unsigned int flag:1;  // This defines a 1-bit unsigned integer
+} BitField;
+BitField dir_change;
+
+#define TRUE 1
+#define FALSE 0
+
+volatile BitField timer_flag;
+
+volatile BitField permissionToWrite;
+
+BitField period;
+
+volatile LSM6DSL_Axes_t acc_axes;
+
+volatile int cnt = 0;
+
+volatile int iterator = 0;
+
+
+
+typedef struct {
+    double acc_axes_x;
+    int cnt;
+} Data;
+
+
+#define BUFFER_SIZE 100
+#define WINDOW_SIZE 10
+volatile Data buffer1[BUFFER_SIZE];
+volatile Data buffer2[BUFFER_SIZE];
+volatile Data processedBuffer1[BUFFER_SIZE];
+volatile Data processedBuffer2[BUFFER_SIZE];
+volatile int buffer_index = 0;
+volatile int procBuffer_index = 0;
+
+volatile Data *writeBuffer = buffer1;
+volatile Data *readBuffer = buffer2;
+volatile Data *procWriteBuffer = processedBuffer1;
+volatile Data *procReadBuffer = processedBuffer2;
+
+volatile BitField isBufferSwitched;
+volatile BitField isProcBufferSwitched;
+
+volatile double movAvgSum = 0; // Sum for moving average calculation
+volatile double window[WINDOW_SIZE] = {0};
+volatile int window_index = 0;
+
+volatile uint8_t num_data_in_window = 0;
+
+uint8_t velocity_cnt = 0;
+
+//Meanhez:
+
+volatile double runningTotal = 0;
+volatile int count = 0;
+volatile double currentMean = 0;
+
+double last_acceleration = 0.0;
+double last_velocity = 0.0;
+double current_velocity = 0.0;
+double current_displacement = 0.0;
+double centered_velocity = 0;
+
+double runningTotalVelocity = 0.0;
+uint8_t zeroCrossing = 0;
+double filtered_velocity = 0;
+
+double periodTime = 0;
+double realPeriodTime = 0;
+double startPeriod = 0;
+double endPeriod = 0;
+
+double delay = 0;
+int delay_cnt = 0;
+BitField delay_flag;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -56,6 +141,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_SPI2_Init(void);
+static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 static void MEMS_Init(void);
 /* USER CODE END PFP */
@@ -64,158 +150,163 @@ static void MEMS_Init(void);
 /* USER CODE BEGIN 0 */
 
 
-	uint8_t LED_CLEAR[6] = {0};
-	uint8_t LED_0[6]  = {0x01, 0x00, 0x00, 0x00, 0x00, 0x00};
-	uint8_t LED_1[6]  = {0x02, 0x00, 0x00, 0x00, 0x00, 0x00};
-	uint8_t LED_2[6]  = {0x04, 0x00, 0x00, 0x00, 0x00, 0x00};
-	uint8_t LED_3[6]  = {0x08, 0x00, 0x00, 0x00, 0x00, 0x00};
-	uint8_t LED_4[6]  = {0x10, 0x00, 0x00, 0x00, 0x00, 0x00};
-	uint8_t LED_5[6]  = {0x20, 0x00, 0x00, 0x00, 0x00, 0x00};
-	uint8_t LED_6[6]  = {0x40, 0x00, 0x00, 0x00, 0x00, 0x00};
-	uint8_t LED_7[6]  = {0x80, 0x00, 0x00, 0x00, 0x00, 0x00};
-	uint8_t LED_8[6]  = {0x00, 0x01, 0x00, 0x00, 0x00, 0x00};
-	uint8_t LED_9[6]  = {0x00, 0x02, 0x00, 0x00, 0x00, 0x00};
-	uint8_t LED_10[6] = {0x00, 0x04, 0x00, 0x00, 0x00, 0x00};
-	uint8_t LED_11[6] = {0x00, 0x08, 0x00, 0x00, 0x00, 0x00};
-	uint8_t LED_12[6] = {0x00, 0x10, 0x00, 0x00, 0x00, 0x00};
-	uint8_t LED_13[6] = {0x00, 0x20, 0x00, 0x00, 0x00, 0x00};
-	uint8_t LED_14[6] = {0x00, 0x40, 0x00, 0x00, 0x00, 0x00};
-	uint8_t LED_15[6] = {0x00, 0x80, 0x00, 0x00, 0x00, 0x00};
-	uint8_t LED_16[6] = {0x00, 0x00, 0x01, 0x00, 0x00, 0x00};
-	uint8_t LED_17[6] = {0x00, 0x00, 0x02, 0x00, 0x00, 0x00};
-	uint8_t LED_18[6] = {0x00, 0x00, 0x04, 0x00, 0x00, 0x00};
-	uint8_t LED_19[6] = {0x00, 0x00, 0x08, 0x00, 0x00, 0x00};
-	uint8_t LED_20[6] = {0x00, 0x00, 0x10, 0x00, 0x00, 0x00};
-	uint8_t LED_21[6] = {0x00, 0x00, 0x20, 0x00, 0x00, 0x00};
-	uint8_t LED_22[6] = {0x00, 0x00, 0x40, 0x00, 0x00, 0x00};
-	uint8_t LED_23[6] = {0x00, 0x00, 0x80, 0x00, 0x00, 0x00};
-	uint8_t LED_24[6] = {0x00, 0x00, 0x00, 0x01, 0x00, 0x00};
-	uint8_t LED_25[6] = {0x00, 0x00, 0x00, 0x02, 0x00, 0x00};
-	uint8_t LED_26[6] = {0x00, 0x00, 0x00, 0x04, 0x00, 0x00};
-	uint8_t LED_27[6] = {0x00, 0x00, 0x00, 0x08, 0x00, 0x00};
-	uint8_t LED_28[6] = {0x00, 0x00, 0x00, 0x10, 0x00, 0x00};
-	uint8_t LED_29[6] = {0x00, 0x00, 0x00, 0x20, 0x00, 0x00};
-	uint8_t LED_30[6] = {0x00, 0x00, 0x00, 0x40, 0x00, 0x00};
-	uint8_t LED_31[6] = {0x00, 0x00, 0x00, 0x80, 0x00, 0x00};
-	uint8_t LED_32[6] = {0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
-	uint8_t LED_33[6] = {0x00, 0x00, 0x00, 0x00, 0x02, 0x00};
-	uint8_t LED_34[6] = {0x00, 0x00, 0x00, 0x00, 0x04, 0x00};
-	uint8_t LED_35[6] = {0x00, 0x00, 0x00, 0x00, 0x08, 0x00};
-	uint8_t LED_36[6] = {0x00, 0x00, 0x00, 0x00, 0x10, 0x00};
-	uint8_t LED_37[6] = {0x00, 0x00, 0x00, 0x00, 0x20, 0x00};
-	uint8_t LED_38[6] = {0x00, 0x00, 0x00, 0x00, 0x40, 0x00};
-	uint8_t LED_39[6] = {0x00, 0x00, 0x00, 0x00, 0x80, 0x00};
-	uint8_t LED_40[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x01};
-	uint8_t LED_41[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x02};
-	uint8_t LED_42[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x04};
-	uint8_t LED_43[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x08};
-	uint8_t LED_44[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x10};
-	uint8_t LED_45[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x20};
-	uint8_t LED_46[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x40};
-	uint8_t LED_47[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x80};
-
-	uint8_t LED_ARRAY[48][6] = {
-			{ 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 }, // LED_0
-			{ 0x02, 0x00, 0x00, 0x00, 0x00, 0x00 }, // LED_1
-			{ 0x04, 0x00, 0x00, 0x00, 0x00, 0x00 }, // LED_2
-			{ 0x08, 0x00, 0x00, 0x00, 0x00, 0x00 }, // LED_3
-			{ 0x10, 0x00, 0x00, 0x00, 0x00, 0x00 }, // LED_4
-			{ 0x20, 0x00, 0x00, 0x00, 0x00, 0x00 }, // LED_5
-			{ 0x40, 0x00, 0x00, 0x00, 0x00, 0x00 }, // LED_6
-			{ 0x80, 0x00, 0x00, 0x00, 0x00, 0x00 }, // LED_7
-			{ 0x00, 0x01, 0x00, 0x00, 0x00, 0x00 }, // LED_8
-			{ 0x00, 0x02, 0x00, 0x00, 0x00, 0x00 }, // LED_9
-			{ 0x00, 0x04, 0x00, 0x00, 0x00, 0x00 }, // LED_10
-			{ 0x00, 0x08, 0x00, 0x00, 0x00, 0x00 }, // LED_11
-			{ 0x00, 0x10, 0x00, 0x00, 0x00, 0x00 }, // LED_12
-			{ 0x00, 0x20, 0x00, 0x00, 0x00, 0x00 }, // LED_13
-			{ 0x00, 0x40, 0x00, 0x00, 0x00, 0x00 }, // LED_14
-			{ 0x00, 0x80, 0x00, 0x00, 0x00, 0x00 }, // LED_15
-			{ 0x00, 0x00, 0x01, 0x00, 0x00, 0x00 }, // LED_16
-			{ 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 }, // LED_17
-			{ 0x00, 0x00, 0x04, 0x00, 0x00, 0x00 }, // LED_18
-			{ 0x00, 0x00, 0x08, 0x00, 0x00, 0x00 }, // LED_19
-			{ 0x00, 0x00, 0x10, 0x00, 0x00, 0x00 }, // LED_20
-			{ 0x00, 0x00, 0x20, 0x00, 0x00, 0x00 }, // LED_21
-			{ 0x00, 0x00, 0x40, 0x00, 0x00, 0x00 }, // LED_22
-			{ 0x00, 0x00, 0x80, 0x00, 0x00, 0x00 }, // LED_23
-			{ 0x00, 0x00, 0x00, 0x01, 0x00, 0x00 }, // LED_24
-			{ 0x00, 0x00, 0x00, 0x02, 0x00, 0x00 }, // LED_25
-			{ 0x00, 0x00, 0x00, 0x04, 0x00, 0x00 }, // LED_26
-			{ 0x00, 0x00, 0x00, 0x08, 0x00, 0x00 }, // LED_27
-			{ 0x00, 0x00, 0x00, 0x10, 0x00, 0x00 }, // LED_28
-			{ 0x00, 0x00, 0x00, 0x20, 0x00, 0x00 }, // LED_29
-			{ 0x00, 0x00, 0x00, 0x40, 0x00, 0x00 }, // LED_30
-			{ 0x00, 0x00, 0x00, 0x80, 0x00, 0x00 }, // LED_31
-			{ 0x00, 0x00, 0x00, 0x00, 0x01, 0x00 }, // LED_32
-			{ 0x00, 0x00, 0x00, 0x00, 0x02, 0x00 }, // LED_33
-			{ 0x00, 0x00, 0x00, 0x00, 0x04, 0x00 }, // LED_34
-			{ 0x00, 0x00, 0x00, 0x00, 0x08, 0x00 }, // LED_35
-			{ 0x00, 0x00, 0x00, 0x00, 0x10, 0x00 }, // LED_36
-			{ 0x00, 0x00, 0x00, 0x00, 0x20, 0x00 }, // LED_37
-			{ 0x00, 0x00, 0x00, 0x00, 0x40, 0x00 }, // LED_38
-			{ 0x00, 0x00, 0x00, 0x00, 0x80, 0x00 }, // LED_39
-			{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 }, // LED_40
-			{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 }, // LED_41
-			{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x04 }, // LED_42
-			{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x08 }, // LED_43
-			{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x10 }, // LED_44
-			{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x20 }, // LED_45
-			{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x40 }, // LED_46
-			{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x80 }  // LED_47
-	};
 
 
 
-//Matrices fo ASCII characters:
+uint8_t LED_CLEAR[6] = { 0 };
+uint8_t LED_0[6] = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
+uint8_t LED_1[6] = { 0x02, 0x00, 0x00, 0x00, 0x00, 0x00 };
+uint8_t LED_2[6] = { 0x04, 0x00, 0x00, 0x00, 0x00, 0x00 };
+uint8_t LED_3[6] = { 0x08, 0x00, 0x00, 0x00, 0x00, 0x00 };
+uint8_t LED_4[6] = { 0x10, 0x00, 0x00, 0x00, 0x00, 0x00 };
+uint8_t LED_5[6] = { 0x20, 0x00, 0x00, 0x00, 0x00, 0x00 };
+uint8_t LED_6[6] = { 0x40, 0x00, 0x00, 0x00, 0x00, 0x00 };
+uint8_t LED_7[6] = { 0x80, 0x00, 0x00, 0x00, 0x00, 0x00 };
+uint8_t LED_8[6] = { 0x00, 0x01, 0x00, 0x00, 0x00, 0x00 };
+uint8_t LED_9[6] = { 0x00, 0x02, 0x00, 0x00, 0x00, 0x00 };
+uint8_t LED_10[6] = { 0x00, 0x04, 0x00, 0x00, 0x00, 0x00 };
+uint8_t LED_11[6] = { 0x00, 0x08, 0x00, 0x00, 0x00, 0x00 };
+uint8_t LED_12[6] = { 0x00, 0x10, 0x00, 0x00, 0x00, 0x00 };
+uint8_t LED_13[6] = { 0x00, 0x20, 0x00, 0x00, 0x00, 0x00 };
+uint8_t LED_14[6] = { 0x00, 0x40, 0x00, 0x00, 0x00, 0x00 };
+uint8_t LED_15[6] = { 0x00, 0x80, 0x00, 0x00, 0x00, 0x00 };
+uint8_t LED_16[6] = { 0x00, 0x00, 0x01, 0x00, 0x00, 0x00 };
+uint8_t LED_17[6] = { 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 };
+uint8_t LED_18[6] = { 0x00, 0x00, 0x04, 0x00, 0x00, 0x00 };
+uint8_t LED_19[6] = { 0x00, 0x00, 0x08, 0x00, 0x00, 0x00 };
+uint8_t LED_20[6] = { 0x00, 0x00, 0x10, 0x00, 0x00, 0x00 };
+uint8_t LED_21[6] = { 0x00, 0x00, 0x20, 0x00, 0x00, 0x00 };
+uint8_t LED_22[6] = { 0x00, 0x00, 0x40, 0x00, 0x00, 0x00 };
+uint8_t LED_23[6] = { 0x00, 0x00, 0x80, 0x00, 0x00, 0x00 };
+uint8_t LED_24[6] = { 0x00, 0x00, 0x00, 0x01, 0x00, 0x00 };
+uint8_t LED_25[6] = { 0x00, 0x00, 0x00, 0x02, 0x00, 0x00 };
+uint8_t LED_26[6] = { 0x00, 0x00, 0x00, 0x04, 0x00, 0x00 };
+uint8_t LED_27[6] = { 0x00, 0x00, 0x00, 0x08, 0x00, 0x00 };
+uint8_t LED_28[6] = { 0x00, 0x00, 0x00, 0x10, 0x00, 0x00 };
+uint8_t LED_29[6] = { 0x00, 0x00, 0x00, 0x20, 0x00, 0x00 };
+uint8_t LED_30[6] = { 0x00, 0x00, 0x00, 0x40, 0x00, 0x00 };
+uint8_t LED_31[6] = { 0x00, 0x00, 0x00, 0x80, 0x00, 0x00 };
+uint8_t LED_32[6] = { 0x00, 0x00, 0x00, 0x00, 0x01, 0x00 };
+uint8_t LED_33[6] = { 0x00, 0x00, 0x00, 0x00, 0x02, 0x00 };
+uint8_t LED_34[6] = { 0x00, 0x00, 0x00, 0x00, 0x04, 0x00 };
+uint8_t LED_35[6] = { 0x00, 0x00, 0x00, 0x00, 0x08, 0x00 };
+uint8_t LED_36[6] = { 0x00, 0x00, 0x00, 0x00, 0x10, 0x00 };
+uint8_t LED_37[6] = { 0x00, 0x00, 0x00, 0x00, 0x20, 0x00 };
+uint8_t LED_38[6] = { 0x00, 0x00, 0x00, 0x00, 0x40, 0x00 };
+uint8_t LED_39[6] = { 0x00, 0x00, 0x00, 0x00, 0x80, 0x00 };
+uint8_t LED_40[6] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 };
+uint8_t LED_41[6] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 };
+uint8_t LED_42[6] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x04 };
+uint8_t LED_43[6] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x08 };
+uint8_t LED_44[6] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x10 };
+uint8_t LED_45[6] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x20 };
+uint8_t LED_46[6] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x40 };
+uint8_t LED_47[6] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x80 };
 
-/* for example: A:
- *  0 1 1 1 0
-    1 0 0 0 1
-    1 0 0 0 1
-    1 1 1 1 1
-    1 0 0 0 1
-    1 0 0 0 1
-    0 0 0 0 0
-    0 0 0 0 0
+uint8_t LED_ARRAY[48][6] = {
+		{ 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 }, // LED_0
+		{ 0x02, 0x00, 0x00, 0x00, 0x00, 0x00 }, // LED_1
+		{ 0x04, 0x00, 0x00, 0x00, 0x00, 0x00 }, // LED_2
+		{ 0x08, 0x00, 0x00, 0x00, 0x00, 0x00 }, // LED_3
+		{ 0x10, 0x00, 0x00, 0x00, 0x00, 0x00 }, // LED_4
+		{ 0x20, 0x00, 0x00, 0x00, 0x00, 0x00 }, // LED_5
+		{ 0x40, 0x00, 0x00, 0x00, 0x00, 0x00 }, // LED_6
+		{ 0x80, 0x00, 0x00, 0x00, 0x00, 0x00 }, // LED_7
+		{ 0x00, 0x01, 0x00, 0x00, 0x00, 0x00 }, // LED_8
+		{ 0x00, 0x02, 0x00, 0x00, 0x00, 0x00 }, // LED_9
+		{ 0x00, 0x04, 0x00, 0x00, 0x00, 0x00 }, // LED_10
+		{ 0x00, 0x08, 0x00, 0x00, 0x00, 0x00 }, // LED_11
+		{ 0x00, 0x10, 0x00, 0x00, 0x00, 0x00 }, // LED_12
+		{ 0x00, 0x20, 0x00, 0x00, 0x00, 0x00 }, // LED_13
+		{ 0x00, 0x40, 0x00, 0x00, 0x00, 0x00 }, // LED_14
+		{ 0x00, 0x80, 0x00, 0x00, 0x00, 0x00 }, // LED_15
+		{ 0x00, 0x00, 0x01, 0x00, 0x00, 0x00 }, // LED_16
+		{ 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 }, // LED_17
+		{ 0x00, 0x00, 0x04, 0x00, 0x00, 0x00 }, // LED_18
+		{ 0x00, 0x00, 0x08, 0x00, 0x00, 0x00 }, // LED_19
+		{ 0x00, 0x00, 0x10, 0x00, 0x00, 0x00 }, // LED_20
+		{ 0x00, 0x00, 0x20, 0x00, 0x00, 0x00 }, // LED_21
+		{ 0x00, 0x00, 0x40, 0x00, 0x00, 0x00 }, // LED_22
+		{ 0x00, 0x00, 0x80, 0x00, 0x00, 0x00 }, // LED_23
+		{ 0x00, 0x00, 0x00, 0x01, 0x00, 0x00 }, // LED_24
+		{ 0x00, 0x00, 0x00, 0x02, 0x00, 0x00 }, // LED_25
+		{ 0x00, 0x00, 0x00, 0x04, 0x00, 0x00 }, // LED_26
+		{ 0x00, 0x00, 0x00, 0x08, 0x00, 0x00 }, // LED_27
+		{ 0x00, 0x00, 0x00, 0x10, 0x00, 0x00 }, // LED_28
+		{ 0x00, 0x00, 0x00, 0x20, 0x00, 0x00 }, // LED_29
+		{ 0x00, 0x00, 0x00, 0x40, 0x00, 0x00 }, // LED_30
+		{ 0x00, 0x00, 0x00, 0x80, 0x00, 0x00 }, // LED_31
+		{ 0x00, 0x00, 0x00, 0x00, 0x01, 0x00 }, // LED_32
+		{ 0x00, 0x00, 0x00, 0x00, 0x02, 0x00 }, // LED_33
+		{ 0x00, 0x00, 0x00, 0x00, 0x04, 0x00 }, // LED_34
+		{ 0x00, 0x00, 0x00, 0x00, 0x08, 0x00 }, // LED_35
+		{ 0x00, 0x00, 0x00, 0x00, 0x10, 0x00 }, // LED_36
+		{ 0x00, 0x00, 0x00, 0x00, 0x20, 0x00 }, // LED_37
+		{ 0x00, 0x00, 0x00, 0x00, 0x40, 0x00 }, // LED_38
+		{ 0x00, 0x00, 0x00, 0x00, 0x80, 0x00 }, // LED_39
+		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 }, // LED_40
+		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 }, // LED_41
+		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x04 }, // LED_42
+		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x08 }, // LED_43
+		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x10 }, // LED_44
+		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x20 }, // LED_45
+		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x40 }, // LED_46
+		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x80 }  // LED_47
+};
 
-    would look like this, now i write each column into a vector, and i will light up these leds
-    with a delay to display the character
- */
+	/* for example: A:
+	 *  0 1 1 1 0
+	 	1 0 0 0 1
+	    1 0 0 0 1
+	    1 1 1 1 1
+	    1 0 0 0 1
+	    1 0 0 0 1
+	    0 0 0 0 0
+	    0 0 0 0 0
 
-
-	uint16_t A[9] = {0x1FFF, 0x2080, 0x4080, 0x8080, 0x8080, 0x8080, 0x4080, 0x2080, 0x1FFF};  // Binary: 00011100, 00100010, ...
+	 would look like this, now i write each column into a vector, and i will light up these leds
+	 with a delay to display the character
+	 */
 
 void OutputEnable(void) {
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_RESET); // Set PB2 low to enable output
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_RESET); // Set PB2 low to enable output
 }
 
 void OutputDisable(void) {
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_SET); // Set PB2 high to disable output
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_SET); // Set PB2 high to disable output
 }
 
 void LatchEnable(void) {
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);   // Set PB1 high
-    HAL_Delay(1);  // Short delay to ensure the latch pulse is detected
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET); // Set PB1 low again
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);   // Set PB1 high
+	HAL_Delay(1);  // Short delay to ensure the latch pulse is detected
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET); // Set PB1 low again
 }
 
+
 void SendLEDData(uint8_t *data) {
-    for (int i = 5; i >= 0; i--) {  // Loop through data array backward
-        HAL_SPI_Transmit(&hspi2, &data[i], 1, 100);
-    }
-    LatchEnable();
+	for (int i = 5; i >= 0; i--) {  // Loop through data array backward
+		HAL_SPI_Transmit(&hspi2, &data[i], 1, 100);  // Send 1 byte per driver
+	}
+	LatchEnable();  // Latch data once all have been transmitted
 }
 
 void CombineLEDData(uint8_t *result, uint8_t ledIdx) {
 
-	        for (int j = 0; j < 6; j++) {   // Each LED configuration is 6 bytes
-	            result[j] |= LED_ARRAY[ledIdx][j];
-	        }
+	for (int j = 0; j < 6; j++) {   // Each LED configuration is 6 bytes
+		result[j] |= LED_ARRAY[ledIdx][j];
+	}
 
 }
 
-void CombineAndSendNEW(uint16_t ledMask){
+void ShiftLEDData(uint8_t *result, uint8_t ledIdx) {
+
+	for (int j = 0; j < 6; j++) {   // Each LED configuration is 6 bytes
+		result[j] += LED_ARRAY[ledIdx][j];
+	}
+
+}
+
+void CombineAndSendNEW(uint16_t ledMask,uint8_t color) {
 
 	//if the value of a variable is 1, concatenate that LED into the sum
 	char a = (ledMask & 0b1000000000000000) >> 15;
@@ -235,78 +326,338 @@ void CombineAndSendNEW(uint16_t ledMask){
 	char o = (ledMask & 0b0000000000000010) >> 1;
 	char p = (ledMask & 0b0000000000000001);
 
-	uint8_t LED[6] = {0};
+	uint8_t LED[6] = { 0 };
+/*
+	if(color == red){
 
-	if(a) {
-	    CombineLEDData(&LED, 0);
-	}
-	if(b) {
-	    CombineLEDData(&LED, 3);
-	}
-	if(c) {
-	    CombineLEDData(&LED, 6);
-	}
-	if(d) {
-	    CombineLEDData(&LED, 9);
-	}
-	if(e) {
-	    CombineLEDData(&LED, 12);
-	}
-	if(f) {
-	    CombineLEDData(&LED, 15);
-	}
-	if(g) {
-	    CombineLEDData(&LED, 18);
-	}
-	if(h) {
-	    CombineLEDData(&LED, 21);
-	}
-	if(i) {
-	    CombineLEDData(&LED, 24);
-	}
-	if(j) {
-	    CombineLEDData(&LED, 27);
-	}
-	if(k) {
-	    CombineLEDData(&LED, 30);
-	}
-	if(l) {
-	    CombineLEDData(&LED, 33);
-	}
-	if(m) {
-	    CombineLEDData(&LED, 36);
-	}
-	if(n) {
-	    CombineLEDData(&LED, 39);
-	}
-	if(o) {
-	    CombineLEDData(&LED, 42);
-	}
-	if(p) {
-	    CombineLEDData(&LED, 45);
+		for (int j = 0; j < 6; j++) {   // Each LED configuration is 6 bytes
+				LED[j] |= 1;
+			}
 	}
 
-	SendLEDData(&LED);
+	if(color == green){
+		CombineLEDData(LED,green);
+	}
+*/
+
+	if (a) {
+		CombineLEDData(LED, 0);
+	}
+	if (b) {
+		CombineLEDData(LED, 3);
+	}
+	if (c) {
+		CombineLEDData(LED, 6);
+	}
+	if (d) {
+		CombineLEDData(LED, 9);
+	}
+	if (e) {
+		CombineLEDData(LED, 12);
+	}
+	if (f) {
+		CombineLEDData(LED, 15);
+	}
+	if (g) {
+		CombineLEDData(LED, 18);
+	}
+	if (h) {
+		CombineLEDData(LED, 21);
+	}
+	if (i) {
+		CombineLEDData(LED, 24);
+	}
+	if (j) {
+		CombineLEDData(LED, 27);
+	}
+	if (k) {
+		CombineLEDData(LED, 30);
+	}
+	if (l) {
+		CombineLEDData(LED, 33);
+	}
+	if (m) {
+		CombineLEDData(LED, 36);
+	}
+	if (n) {
+		CombineLEDData(LED, 39);
+	}
+	if (o) {
+		CombineLEDData(LED, 42);
+	}
+	if (p) {
+		CombineLEDData(LED, 45);
+	}
+
+	SendLEDData(LED);
+}
+
+int32_t wrap_platform_read(uint8_t Address, uint8_t Reg, uint8_t *Bufp,
+		uint16_t len) {
+	Reg |= 0x80;
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
+	BSP_SPI1_Send(&Reg, 1);
+	BSP_SPI1_SendRecv(&Reg, Bufp, len);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
+	return 0;
+}
+
+int32_t wrap_platform_write(uint8_t Address, uint8_t Reg, uint8_t *Bufp,
+		uint16_t len) {
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
+	BSP_SPI1_Send(&Reg, 1);
+	BSP_SPI1_Send(Bufp, len);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
+	return 0;
+}
+
+void Delay() {
+
+    delay = (realPeriodTime/2.0)/(9.0);
+    delay_flag.flag = TRUE;
+
+    while(delay_flag.flag){
+
+    }
+}
+
+void Display_char(uint16_t (*ASCII)[9], int32_t x){
+
+
+	//if we move it to the right read the array from 0->9
+	if (x > 200 && dir_change.flag == 1) {
+		for (int a = 0; a < 7; a++) {
+			for (int i = 0; i < 9; i++) {
+				CombineAndSendNEW(ASCII[a][i], red);
+				HAL_Delay(calculateDelay());
+			}
+		}
+
+		dir_change.flag ^= 1;
+	}
+
+	//if we move it to the left read the array backwards
+	else if (x < -200 && dir_change.flag == 0) {
+		for (int b = 0; b < 7; b++) {
+			for (int j = 8; j >= 0; j--) {
+				CombineAndSendNEW(ASCII[b][j], red);
+				HAL_Delay(calculateDelay());
+			}
+		}
+
+		dir_change.flag ^= 1;
+	}
+}
+
+void Display(uint16_t ASCII[9], int32_t x) {
+
+	if (x > 100 && dir_change.flag == 1) {
+
+		for (int i = 0; i < 9; i++) {
+			CombineAndSendNEW(ASCII[i], red);
+			Delay();
+		}
+
+		dir_change.flag ^= 1;
+	}
+
+	else if (x < -200 && dir_change.flag == 0) {
+
+		for (int j = 8; j >= 0; j--) {
+			CombineAndSendNEW(ASCII[j], red);
+			Delay();
+		}
+
+		dir_change.flag ^= 1;
+	}
+}
+
+// Update mean and center data dynamically
+double updateMeanAndCenterData(double newData) {
+    runningTotal += newData;
+    count++;
+    currentMean = runningTotal / count;
+    return newData - currentMean;
+}
+
+double centerVelocity(double newData) {
+    runningTotal += newData;
+    count++;
+    currentMean = runningTotal / count;
+    return newData - currentMean;
+}
+
+//Center + moving average
+void process_sensor_data(Data *readBuffer) {
+
+	//For the first "WINDOW_SIZE" iterations old_value will be 0, then it will always be the
+	//oldest value, this way i can calculate a moving average dynamically
+	//Centering it before applying moving average
+	double centeredData = updateMeanAndCenterData(readBuffer[buffer_index].acc_axes_x);
+
+	//Pass old data, then override that index with new data
+    int old_value = window[window_index];
+    window[window_index] = centeredData;
+
+    // Update sum for moving average
+    movAvgSum -= old_value;
+    movAvgSum += centeredData;
+
+
+    if (num_data_in_window < WINDOW_SIZE) {
+		num_data_in_window++;  // Only needed for the first few iterations, after that it
+		//will become WINDOW_SIZE
+	}
+
+    // Move window index forward
+    window_index = (window_index + 1) % WINDOW_SIZE;
+
+    // Calculate moving average
+
+    double moving_average = movAvgSum / (double) num_data_in_window;
+
+    if (procBuffer_index >= BUFFER_SIZE) {
+		switchBuffers(&procWriteBuffer,&procReadBuffer,processedBuffer1,processedBuffer2); // Switch the buffers
+		procBuffer_index = 0; // Reset buffer index for new writing
+		isProcBufferSwitched.flag = TRUE; // Set the flag indicating buffer switch
+	}
+
+    //printf("Raw Data: %f, Moving Average: %f\n\r", centeredData, moving_average);
+    procWriteBuffer[procBuffer_index].acc_axes_x = moving_average;
+
+
+   // printf("%f", procWriteBuffer[procBuffer_index]);
+
+    procBuffer_index++;
+
+
+}
+
+void switchBuffers(Data** writeBuffer, Data** readBuffer, Data* buffer1, Data* buffer2) {
+    if (*writeBuffer == buffer1) {
+        *writeBuffer = buffer2;
+        *readBuffer = buffer1;
+    } else {
+        *writeBuffer = buffer1;
+        *readBuffer = buffer2;
+    }
 
 }
 
 
-int32_t wrap_platform_read(uint8_t Address, uint8_t Reg, uint8_t *Bufp, uint16_t len){
-  Reg |= 0x80;
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
-  BSP_SPI1_Send(&Reg, 1);
-  BSP_SPI1_SendRecv(&Reg, Bufp, len);
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
-  return 0;
+
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+	if (htim->Instance == TIM2) {
+		LSM6DSL_ACC_GetAxes(&MotionSensor, &acc_axes);
+
+		// Check if buffer is ready to switch
+		if (buffer_index >= BUFFER_SIZE) {
+			switchBuffers(&writeBuffer,&readBuffer,buffer1,buffer2); // Switch the buffers
+			buffer_index = 0; // Reset buffer index for new writing
+			isBufferSwitched.flag = TRUE; // Set the flag indicating buffer switch
+		}
+
+		// Write data to the active buffer
+		writeBuffer[buffer_index].acc_axes_x = updateMeanAndCenterData((int) acc_axes.x);
+		writeBuffer[buffer_index].cnt = cnt;
+		buffer_index++;
+		cnt++;
+
+
+
+		timer_flag.flag = TRUE;
+	}
+
+	//Delay:
+	if(delay_flag.flag){
+
+
+
+		if(delay_cnt >= delay){
+
+			delay_flag.flag = FALSE;
+		}
+
+		delay_cnt++;
+	}
+	delay_cnt=0;
 }
 
-int32_t wrap_platform_write(uint8_t Address, uint8_t Reg, uint8_t *Bufp, uint16_t len){
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
-  BSP_SPI1_Send(&Reg, 1);
-  BSP_SPI1_Send(Bufp, len);
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
-  return 0;
+void update_motion(double new_acceleration, double new_time, double delta_t) {
+    static double velocity_buffer[WINDOW_SIZE] = {0};
+    static int buffer_index = 0;
+    static int samples_collected = 0;
+
+
+    const double alpha = 0.3;  // Closer to 1-> faster, closer to 0-> smoother
+
+
+    double average_acceleration = (last_acceleration + new_acceleration) / 2.0;
+    current_velocity += average_acceleration * delta_t;
+
+    // Applying low-pass filter to smooth the velocity
+    if (samples_collected == 0) {
+        filtered_velocity = current_velocity;
+    } else {
+        filtered_velocity = alpha * current_velocity + (1 - alpha) * filtered_velocity;
+    }
+
+    // Store filtered velocity in the buffer
+    velocity_buffer[buffer_index] = filtered_velocity;
+    buffer_index = (buffer_index + 1) % WINDOW_SIZE;
+
+    // Update total sample count only until buffer is first filled
+    if (samples_collected < WINDOW_SIZE) samples_collected++;
+
+    // Calculate the mean of the velocities in the buffer
+    double mean_velocity = 0;
+    for (int i = 0; i < samples_collected; i++) {
+        mean_velocity += velocity_buffer[i];
+    }
+    mean_velocity /= samples_collected;
+
+    // Center the current velocity
+    centered_velocity = filtered_velocity - mean_velocity;
+
+    // Rest of the computation
+    double average_velocity = (last_velocity + centered_velocity) / 2.0;
+    double abs_velocity = (fabs(last_velocity) + fabs(centered_velocity)) / 2.0;
+    current_displacement += abs_velocity * delta_t;
+
+    if ((last_velocity > 0 && centered_velocity < 0) || (last_velocity < 0 && centered_velocity > 0)) {
+        zeroCrossing++;
+    }
+
+    // Update last values
+    last_acceleration = new_acceleration;
+    last_velocity = centered_velocity;
+
+    if (zeroCrossing == 2) {
+        current_displacement = 0;
+        zeroCrossing = 0;
+    }
+
+    if(current_displacement > 3000){
+    	period.flag = TRUE;
+    }
+
+	if (period.flag && (current_displacement == 0)) {
+
+		periodTime = new_time- startPeriod;
+		startPeriod = new_time;
+		period.flag = FALSE;
+
+		if(periodTime > 0){
+			realPeriodTime = periodTime;
+		}
+
+		//printf("startPeriod: %f periodTime: %f\r\n",startPeriod, realPeriodTime);
+	}
+
 }
+
+
 
 /* USER CODE END 0 */
 
@@ -318,8 +669,10 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
-
+	isBufferSwitched.flag = FALSE;
+	isProcBufferSwitched.flag = FALSE;
+	period.flag = FALSE;
+	delay_flag.flag = FALSE;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -342,12 +695,50 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   MX_SPI2_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  dataRdyIntReceived = 0;
-  MEMS_Init();
-  OutputDisable();
+  OutputDisable();  // Disable outputs during initialization
   SendLEDData(LED_CLEAR);
   OutputEnable();
+
+  MEMS_Init();
+
+
+  int delayTime;
+
+  timer_flag.flag = 0;
+
+  HAL_TIM_Base_Start_IT(&htim2);
+
+
+
+  dir_change.flag =1; //using a flag to detect the change of direction
+
+
+  uint16_t ASCII_ARRAY[7][9];
+
+	for (int i = 0; i < 7; i++) {
+		for (int j = 0; j < 9; j++) {
+
+			if (i == 0)
+				ASCII_ARRAY[i][j] = BLANK[j];
+			if (i == 1)
+				ASCII_ARRAY[i][j] = E[j];
+			if (i == 2)
+				ASCII_ARRAY[i][j] = R[j];
+			if (i == 3)
+				ASCII_ARRAY[i][j] = I[j];
+			if (i == 4)
+				ASCII_ARRAY[i][j] = K[j];
+			if (i == 5)
+				ASCII_ARRAY[i][j] = A[j];
+			if (i == 6)
+				ASCII_ARRAY[i][j] = BLANK[j];
+		}
+	}
+
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -355,31 +746,30 @@ int main(void)
   while (1)
   {
 
-/*
- *
-	  for(int i=0; i<48; i++){
-		  SendLEDData(&LED_ARRAY[i][6]);
-		  HAL_Delay(200);
-	  }
-*/
+
+
+	  //Every 0.5ms write out the x axis value
+		if (timer_flag.flag == TRUE) {
 
 
 
-	       dataRdyIntReceived = 0;
-	       LSM6DSL_Axes_t acc_axes;
-	       LSM6DSL_ACC_GetAxes(&MotionSensor, &acc_axes);
-	       printf("% 5d, % 5d, % 5d\r\n",  (int) acc_axes.x, (int) acc_axes.y, (int) acc_axes.z);
+			for (int i = 0; i < BUFFER_SIZE; i++) {
 
 
-	  for(int i=0; i<9; i++){
-		  CombineAndSendNEW(A[i]);
-		  HAL_Delay(10);
-	  }
+				update_motion(readBuffer[i].acc_axes_x, readBuffer[i].cnt,1);
+				printf("%f %f %f %d\r\n", readBuffer[i].acc_axes_x, centered_velocity, current_displacement, readBuffer[i].cnt);
+
+			}
+
+
+			timer_flag.flag = FALSE;
+		}
+
+		//Display(A,acc_axes.x);
 
 
 
 
-	  //SendLEDData((LED_ARRAY[0][6]|LED_ARRAY[3][6]),6);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -425,7 +815,7 @@ void SystemClock_Config(void)
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV8;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
@@ -453,7 +843,7 @@ static void MX_SPI2_Init(void)
   hspi2.Instance = SPI2;
   hspi2.Init.Mode = SPI_MODE_MASTER;
   hspi2.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi2.Init.DataSize = SPI_DATASIZE_16BIT;
+  hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi2.Init.NSS = SPI_NSS_SOFT;
@@ -469,6 +859,51 @@ static void MX_SPI2_Init(void)
   /* USER CODE BEGIN SPI2_Init 2 */
 
   /* USER CODE END SPI2_Init 2 */
+
+}
+
+/**
+  * @brief TIM2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM2_Init(void)
+{
+
+  /* USER CODE BEGIN TIM2_Init 0 */
+
+  /* USER CODE END TIM2_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM2_Init 1 */
+
+  /* USER CODE END TIM2_Init 1 */
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 1050-1;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 9;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM2_Init 2 */
+
+  /* USER CODE END TIM2_Init 2 */
 
 }
 
@@ -568,6 +1003,7 @@ static void MEMS_Init(void)
   LSM6DSL_IO_t io_ctx;
   uint8_t id ;
   LSM6DSL_AxesRaw_t axes;
+  float odr;
 
   /* Link I2C functions to the LSM6DSL driver */
 	io_ctx.BusType = LSM6DSL_SPI_4WIRES_BUS;
@@ -589,13 +1025,17 @@ static void MEMS_Init(void)
   LSM6DSL_Init(&MotionSensor);
 
   /* Configure the LSM6DSL accelerometer (ODR, scale and interrupt) */
-  LSM6DSL_ACC_SetOutputDataRate(&MotionSensor, 26.0f); /* 26 Hz */
-  LSM6DSL_ACC_SetFullScale(&MotionSensor, 4);          /* [-4000mg; +4000mg] */
+  LSM6DSL_ACC_SetOutputDataRate(&MotionSensor, 3330.0f); /* 26 Hz */
+  LSM6DSL_ACC_SetFullScale(&MotionSensor, 8);          /* [-4000mg; +4000mg]  old*/
   LSM6DSL_ACC_Set_INT1_DRDY(&MotionSensor, ENABLE);    /* Enable DRDY */
   LSM6DSL_ACC_GetAxesRaw(&MotionSensor, &axes);        /* Clear DRDY */
 
+
+
   /* Start the LSM6DSL accelerometer */
   LSM6DSL_ACC_Enable(&MotionSensor);
+
+  LSM6DSL_ACC_GetOutputDataRate(&MotionSensor, &odr);
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
@@ -620,9 +1060,10 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-	while(1) {
-
-	  }
+  __disable_irq();
+  while (1)
+  {
+  }
   /* USER CODE END Error_Handler_Debug */
 }
 
