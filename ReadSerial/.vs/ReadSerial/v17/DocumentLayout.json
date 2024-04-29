@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Mikrokontroller_labor\\Code\\Kliens\\ReadSerial\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{454AF143-993A-4884-8970-C2A1E24E391C}|ReadSerial\\ReadSerial.csproj|c:\\mikrokontroller_labor\\code\\kliens\\readserial\\readserial\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{454AF143-993A-4884-8970-C2A1E24E391C}|ReadSerial\\ReadSerial.csproj|solutionrelative:readserial\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Mikrokontroller_labor\\Code\\Kliens\\ReadSerial\\ReadSerial\\Program.cs",
+              "RelativeDocumentMoniker": "ReadSerial\\Program.cs",
+              "ToolTip": "C:\\Mikrokontroller_labor\\Code\\Kliens\\ReadSerial\\ReadSerial\\Program.cs",
+              "RelativeToolTip": "ReadSerial\\Program.cs",
+              "ViewState": "AQIAAA0AAAAAAAAAAAAWwBcAAAAQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-19T13:45:49.258Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
