@@ -57,19 +57,14 @@ UART_HandleTypeDef huart2;
 LSM6DSL_Object_t MotionSensor;
 volatile uint32_t dataRdyIntReceived;
 
-typedef struct {
-    unsigned int flag:1;  // This defines a 1-bit unsigned integer
-} BitField;
-BitField dir_change;
-
 #define TRUE 1
 #define FALSE 0
 
-volatile BitField timer_flag;
+volatile uint8_t timer_flag = FALSE;
 
-volatile BitField permissionToWrite;
+volatile uint8_t permissionToWrite;
 
-BitField period;
+uint8_t period_flag = FALSE;
 
 volatile LSM6DSL_Axes_t acc_axes;
 
@@ -84,12 +79,29 @@ typedef struct {
     int cnt;
 } Data;
 
+typedef struct {
+	double displacement;
+	int cnt;
+} Displacement;
+
 
 #define BUFFER_SIZE 3000
+#define DISP_BUFFER_SIZE 200
 #define WINDOW_SIZE 10
-volatile Data Buffer[BUFFER_SIZE];
+volatile Data Buffer[BUFFER_SIZE] = {0};
 volatile int read_idx = 0;
 volatile int write_idx = 0;
+uint8_t disp_usable = FALSE;
+int disp_cnt = 0;
+double max_displacement = 0;
+double middle_point = 0;
+uint8_t first_column = TRUE;
+
+double abs_velocity = 0;
+
+double k;
+int max_range_index = 44;
+int disp_array_idx = 0;
 
 volatile double movAvgSum = 0; // Sum for moving average calculation
 volatile double window[WINDOW_SIZE] = {0};
@@ -115,14 +127,9 @@ double runningTotalVelocity = 0.0;
 uint8_t zeroCrossing = 0;
 double filtered_velocity = 0;
 
-double periodTime = 0;
-double realPeriodTime = 0;
-double startPeriod = 0;
-double endPeriod = 0;
-
 double delay = 0;
 int delay_cnt = 0;
-BitField delay_flag;
+uint8_t delay_flag = FALSE;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -289,7 +296,7 @@ void CombineLEDData(uint8_t *result, uint8_t ledIdx) {
 
 void ShiftLEDData(uint8_t *result, uint8_t ledIdx) {
 
-	for (int j = 0; j < 6; j++) {   // Each LED configuration is 6 bytes
+	for (int j = 0; j < 6; j++) {
 		result[j] += LED_ARRAY[ledIdx][j];
 	}
 
@@ -400,66 +407,59 @@ int32_t wrap_platform_write(uint8_t Address, uint8_t Reg, uint8_t *Bufp,
 	return 0;
 }
 
-void Delay() {
+int calculateDisplayIndex(double displacement, double middlePoint, uint8_t positiveVelocity) {
+    double k = (max_displacement / 2.0) / 45.0;
+    int range_index;
 
-    delay = (realPeriodTime/2.0)/(9.0);
-    delay_flag.flag = TRUE;
+    if (positiveVelocity == TRUE) {
+        range_index = (int)(displacement / k);
+    } else {
+        range_index = (int)((displacement - middlePoint) / k); //The middlePoint needs to be
+        //substracted, because i want to have 45 equal segments for the forward and the
+        //backward motion too, if im moving backward i want the start of the backward motion
+        //to be 0
+        range_index = max_range_index - range_index; // Reverse the index
+    }
 
-    while(delay_flag.flag){
+    // Clamping the range index to allowed values
+    if (range_index < 0) range_index = 0;
+    if (range_index > max_range_index) range_index = max_range_index;
+    return range_index;
+}
 
+void sendDisplayData(uint16_t (*ASCII)[9], int index) {
+    int disp_array_idx = index / 8;
+    int send_index = index % 8;
+    CombineAndSendNEW(ASCII[disp_array_idx][send_index], red);
+}
+
+void clearDisplayIfNeeded(uint8_t *flag) {
+    if (*flag == TRUE) {
+        SendLEDData(LED_CLEAR);
+        SendLEDData(LED_CLEAR);
+        *flag = FALSE;  // Reset the flag after clearing
     }
 }
 
-void Display_char(uint16_t (*ASCII)[9], int32_t x){
+void Display(uint16_t (*ASCII)[9]) {
+    // Ensure the display is cleared if needed before any new updates
+    clearDisplayIfNeeded(&first_column);
 
+    uint8_t isVelocityPositive = (centered_velocity > 0) ? TRUE : FALSE;
+    int range_index = calculateDisplayIndex(current_displacement, middle_point, isVelocityPositive);
 
-	//if we move it to the right read the array from 0->9
-	if (x > 200 && dir_change.flag == 1) {
-		for (int a = 0; a < 7; a++) {
-			for (int i = 0; i < 9; i++) {
-				CombineAndSendNEW(ASCII[a][i], red);
-				HAL_Delay(calculateDelay());
-			}
-		}
+    sendDisplayData(ASCII, range_index);
 
-		dir_change.flag ^= 1;
-	}
+    // Update the middle point if the velocity was positive
+    if (isVelocityPositive == TRUE) {
+        middle_point = current_displacement;
+    }
 
-	//if we move it to the left read the array backwards
-	else if (x < -200 && dir_change.flag == 0) {
-		for (int b = 0; b < 7; b++) {
-			for (int j = 8; j >= 0; j--) {
-				CombineAndSendNEW(ASCII[b][j], red);
-				HAL_Delay(calculateDelay());
-			}
-		}
-
-		dir_change.flag ^= 1;
-	}
+    // Prepare for the next display update
+    first_column = TRUE;  // Ensure the flag is reset for the next cycle
 }
 
-void Display(uint16_t ASCII[9], int32_t x) {
 
-	if (x > 100 && dir_change.flag == 1) {
-
-		for (int i = 0; i < 9; i++) {
-			CombineAndSendNEW(ASCII[i], red);
-			Delay();
-		}
-
-		dir_change.flag ^= 1;
-	}
-
-	else if (x < -200 && dir_change.flag == 0) {
-
-		for (int j = 8; j >= 0; j--) {
-			CombineAndSendNEW(ASCII[j], red);
-			Delay();
-		}
-
-		dir_change.flag ^= 1;
-	}
-}
 
 // Update mean and center data dynamically
 double updateMeanAndCenterData(double newData) {
@@ -476,90 +476,102 @@ double centerVelocity(double newData) {
     return newData - currentMean;
 }
 
-
-
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-	if (htim->Instance == TIM2) {
-		LSM6DSL_ACC_GetAxes(&MotionSensor, &acc_axes);
-
-		// Write data to the active buffer
-		Buffer[write_idx].acc_axes_x = updateMeanAndCenterData((int) acc_axes.x);
-		Buffer[write_idx].cnt = cnt;
-		write_idx = (write_idx + 1) % BUFFER_SIZE;
-		cnt++;
-
-		timer_flag.flag = TRUE;
-	}
-
-	//Delay:
-	if(delay_flag.flag){
-
-
-
-		if(delay_cnt >= delay){
-
-			delay_flag.flag = FALSE;
-		}
-
-		delay_cnt++;
-	}
-	delay_cnt=0;
+void updateBuffer(double acc_data, int index) {
+    Buffer[index].acc_axes_x = updateMeanAndCenterData(acc_data);
+    Buffer[index].cnt = cnt;
+    write_idx = (write_idx + 1) % BUFFER_SIZE;  // Update write index for circular buffering
+    cnt++;
 }
+
+// Timer interrupt callback function
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+    if (htim->Instance == TIM2) {
+        LSM6DSL_Axes_t acc_axes;
+        LSM6DSL_ACC_GetAxes(&MotionSensor, &acc_axes);  // Get new accelerometer data
+
+        // Update the buffer with the new accelerometer data
+        updateBuffer((double) acc_axes.x, write_idx);
+
+        // Set flag to indicate new data is available or some other processing needs to be done
+        timer_flag = TRUE;
+    }
+}
+
+double calculateAverageAcceleration(double last_accel, double new_accel) {
+    return (last_accel + new_accel) / 2.0;
+}
+
+
+double updateAndFilterVelocity(double current_vel, double delta_t, double avg_accel, int *samples_collected) {
+    static double filtered_velocity = 0;
+    const double alpha = 0.98;
+
+    if (*samples_collected == 0) {
+        filtered_velocity = current_vel;
+    } else {
+        filtered_velocity = alpha * current_vel + (1 - alpha) * filtered_velocity;
+    }
+
+    return filtered_velocity;
+}
+
+
+double updateBaseline(double filtered_vel) {
+    static double baseline = 0;
+    const double beta = 0.02;
+
+    baseline = beta * filtered_vel + (1 - beta) * baseline;
+    return baseline;
+}
+
+
+void updateVelocityAndDisplacement(double last_vel, double centered_vel, double delta_t) {
+    double average_velocity = (last_vel + centered_vel) / 2.0;
+    abs_velocity = (fabs(last_vel) + fabs(centered_vel)) / 2.0;
+    current_displacement += abs_velocity * delta_t;
+}
+
+
+void handleZeroCrossings(double last_vel, double centered_vel) {
+    if ((last_vel > 0 && centered_vel < 0) || (last_vel < 0 && centered_vel > 0)) {
+        zeroCrossing++;
+    }
+
+    if (zeroCrossing == 2) {
+        max_displacement = current_displacement;
+        current_displacement = 0;
+        zeroCrossing = 0;
+        disp_usable = TRUE;
+    }
+}
+
 
 void update_motion(double new_acceleration, double new_time, double delta_t) {
     static double velocity_buffer[WINDOW_SIZE] = {0};
     static int buffer_index = 0;
     static int samples_collected = 0;
 
-    const double alpha = 0.98;  // Smoothing factor for velocity low-pass filter
-    const double beta = 0.02;   // Smoothing factor for baseline estimation
+    double avg_acceleration = calculateAverageAcceleration(last_acceleration, new_acceleration);
+    current_velocity += avg_acceleration * delta_t;
+    double filtered_velocity = updateAndFilterVelocity(current_velocity, delta_t, avg_acceleration, &samples_collected);
+    double baseline = updateBaseline(filtered_velocity);
 
-    static double baseline = 0; // Baseline estimation for velocity
-
-    double average_acceleration = (last_acceleration + new_acceleration) / 2.0;
-    current_velocity += average_acceleration * delta_t;
-
-    // Low-pass filter to smooth the velocity
-    if (samples_collected == 0) {
-        filtered_velocity = current_velocity;
-    } else {
-        filtered_velocity = alpha * current_velocity + (1 - alpha) * filtered_velocity;
-    }
-
-    // Estimate and update the baseline using a slower EMA
-    baseline = beta * filtered_velocity + (1 - beta) * baseline;
-
-    // Center the velocity by subtracting the estimated baseline
     centered_velocity = filtered_velocity - baseline;
 
-    // Store the centered velocity in the buffer for analysis or other use
     velocity_buffer[buffer_index] = centered_velocity;
     buffer_index = (buffer_index + 1) % WINDOW_SIZE;
-
     if (samples_collected < WINDOW_SIZE) {
-        samples_collected++;
-    }
+           samples_collected++;
+       }
 
-    // Additional computations
-    double average_velocity = (last_velocity + centered_velocity) / 2.0;
-    double abs_velocity = (fabs(last_velocity) + fabs(centered_velocity)) / 2.0;
-    current_displacement += abs_velocity * delta_t;
+    updateVelocityAndDisplacement(last_velocity, centered_velocity, delta_t);
+    handleZeroCrossings(last_velocity, centered_velocity);
 
-    // Check for zero crossings
-    if ((last_velocity > 0 && centered_velocity < 0) || (last_velocity < 0 && centered_velocity > 0)) {
-        zeroCrossing++;
-    }
-
-    if (zeroCrossing == 2) {
-        current_displacement = 0;
-        zeroCrossing = 0;
-    }
-
-    // Update last values for next iteration
     last_acceleration = new_acceleration;
     last_velocity = centered_velocity;
-}
 
+    read_idx = (read_idx + 1) % BUFFER_SIZE;
+}
 
 
 /* USER CODE END 0 */
@@ -572,8 +584,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-	period.flag = FALSE;
-	delay_flag.flag = FALSE;
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -607,22 +618,17 @@ int main(void)
 
   int delayTime;
 
-  timer_flag.flag = 0;
+  timer_flag = 0;
 
   HAL_TIM_Base_Start_IT(&htim2);
 
 
 
-  dir_change.flag =1; //using a flag to detect the change of direction
-
-
-  uint16_t ASCII_ARRAY[7][9];
+  uint16_t ASCII_ARRAY[5][9];
 
 	for (int i = 0; i < 7; i++) {
 		for (int j = 0; j < 9; j++) {
 
-			if (i == 0)
-				ASCII_ARRAY[i][j] = BLANK[j];
 			if (i == 1)
 				ASCII_ARRAY[i][j] = E[j];
 			if (i == 2)
@@ -633,9 +639,7 @@ int main(void)
 				ASCII_ARRAY[i][j] = K[j];
 			if (i == 5)
 				ASCII_ARRAY[i][j] = A[j];
-			if (i == 6)
-				ASCII_ARRAY[i][j] = BLANK[j];
-		}
+			}
 	}
 
 
@@ -647,26 +651,34 @@ int main(void)
 	while (1) {
 
 		//Every 0.5ms write out the x axis value
-		if (timer_flag.flag == TRUE) {
+		if (timer_flag == TRUE) {
 
 			update_motion(Buffer[read_idx].acc_axes_x, Buffer[read_idx].cnt,1);
 
 			printf("%f %f %f %d\r\n", Buffer[read_idx].acc_axes_x,
-					centered_velocity, current_displacement,
-					Buffer[read_idx].cnt);
+				centered_velocity, current_displacement,
+			Buffer[read_idx].cnt);
 
-			read_idx = (read_idx + 1) % BUFFER_SIZE;
+			if(zeroCrossing == 0){
+				CombineAndSendNEW(0xFFFF,red);
+			}
+			else{
+				CombineAndSendNEW(0x0,red);
+			}
 
-			timer_flag.flag = FALSE;
+
+			timer_flag = FALSE;
 		}
 
-		//Display(A,acc_axes.x);
+		if (disp_usable || zeroCrossing == 0) {
+		//	Display(ASCII_ARRAY);
+		}
 
-		/* USER CODE END WHILE */
+    /* USER CODE END WHILE */
 
-		/* USER CODE BEGIN 3 */
+    /* USER CODE BEGIN 3 */
 	}
-	/* USER CODE END 3 */
+  /* USER CODE END 3 */
 }
 
 /**
@@ -917,7 +929,7 @@ static void MEMS_Init(void)
   LSM6DSL_Init(&MotionSensor);
 
   /* Configure the LSM6DSL accelerometer (ODR, scale and interrupt) */
-  LSM6DSL_ACC_SetOutputDataRate(&MotionSensor, 3330.0f); /* 26 Hz */
+  LSM6DSL_ACC_SetOutputDataRate(&MotionSensor, 1660.0f); /* 1660 Hz */
   LSM6DSL_ACC_SetFullScale(&MotionSensor, 8);          /* [-4000mg; +4000mg]  old*/
   LSM6DSL_ACC_Set_INT1_DRDY(&MotionSensor, ENABLE);    /* Enable DRDY */
   LSM6DSL_ACC_GetAxesRaw(&MotionSensor, &axes);        /* Clear DRDY */
