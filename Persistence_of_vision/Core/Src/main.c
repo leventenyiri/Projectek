@@ -63,18 +63,8 @@ volatile uint32_t dataRdyIntReceived;
 #define FALSE 0
 
 volatile uint8_t timer_flag = FALSE;
-
-volatile uint8_t permissionToWrite;
-
-uint8_t period_flag = FALSE;
-
 volatile LSM6DSL_Axes_t acc_axes;
-
 volatile int cnt = 0;
-
-volatile int iterator = 0;
-
-
 
 typedef struct {
     double acc_axes_x;
@@ -88,30 +78,17 @@ typedef struct {
 
 
 #define BUFFER_SIZE 1000
-#define DISP_BUFFER_SIZE 200
-#define WINDOW_SIZE 10
 volatile Data Buffer[BUFFER_SIZE] = {0};
 volatile int read_idx = 0;
 volatile int write_idx = 0;
 uint8_t disp_usable = FALSE;
-int disp_cnt = 0;
 double max_displacement = 0;
-double middle_point = 0;
-uint8_t first_column = TRUE;
 
 double abs_velocity = 0;
 
 double k;
-int max_range_index = 27;
+int max_range_index = 55;
 int disp_array_idx = 0;
-
-volatile double movAvgSum = 0; // Sum for moving average calculation
-volatile double window[WINDOW_SIZE] = {0};
-volatile int window_index = 0;
-
-volatile uint8_t num_data_in_window = 0;
-
-uint8_t velocity_cnt = 0;
 
 //Meanhez:
 
@@ -125,13 +102,9 @@ double current_velocity = 0.0;
 double current_displacement = 0.0;
 double centered_velocity = 0;
 
-double runningTotalVelocity = 0.0;
 uint8_t zeroCrossing = 0;
 double filtered_velocity = 0;
 
-double delay = 0;
-int delay_cnt = 0;
-uint8_t delay_flag = FALSE;
 int range_index = 0;
 
 double start_point = 0.0;
@@ -287,8 +260,6 @@ void OutputDisable(void) {
 
 void LatchEnable(void) {
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);   // Set PB1 high
-	//HAL_Delay(1);  // Short delay to ensure the latch pulse is detected
-	//HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET); // Set PB1 low again
 }
 
 
@@ -419,10 +390,6 @@ int32_t wrap_platform_write(uint8_t Address, uint8_t Reg, uint8_t *Bufp,
 	BSP_SPI1_Send(Bufp, len);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
 	return 0;
-}
-
-void updateStartPoint(double new_start) {
-    start_point = new_start;
 }
 
 int calculateDisplayIndex(double displacement) {
@@ -660,10 +627,7 @@ int main(void)
 
   MEMS_Init();
 
-
-  int delayTime;
-
-  timer_flag = 0;
+  timer_flag = FALSE;
 
   HAL_TIM_Base_Start_IT(&htim2);
 
@@ -715,10 +679,11 @@ int main(void)
 			}
 
 
-/*
+			/* Using this if i want to gather data to display in matlab
 			printf("%f %f %f %d\r\n", Buffer[read_idx].acc_axes_x,
 				centered_velocity, current_displacement,
-			Buffer[read_idx].cnt); */
+			Buffer[read_idx].cnt);
+			*/
 
 			timer_flag = FALSE;
 			elapsed_time_stop(0);
