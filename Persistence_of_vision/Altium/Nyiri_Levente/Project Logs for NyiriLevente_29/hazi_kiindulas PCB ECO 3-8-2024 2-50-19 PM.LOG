@@ -1,0 +1,11 @@
+Removed Pin From Net: NetName=LED_OEA Pin=U1-60
+Removed Pin From Net: NetName=LED_LEA Pin=U1-62
+Added Component: Designator=IC?(SOT95P280X145-5N)
+Add component (AddParameter): Name = "Name"; Value = "SN74AHC1G04DBVR"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "87-04-46"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=LED_LEA Pin=IC?-2
+Added Pin To Net: NetName=GND Pin=IC?-3
+Added Pin To Net: NetName=LED_OEA Pin=IC?-4
+Added Pin To Net: NetName=3V3 Pin=IC?-5
+Added Pin To Net: NetName=LED_LEA Pin=U1-54

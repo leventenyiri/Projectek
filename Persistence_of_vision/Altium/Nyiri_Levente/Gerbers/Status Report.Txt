@@ -1,0 +1,12 @@
+Output: NC Drill Files
+Type  : NC Drill
+From  : PCB Document [hazi_kiindulas.PcbDoc]
+   Generated File[NyiriLevente_29.TXT]
+   Generated File[NyiriLevente_29.LDP]
+   Generated File[NyiriLevente_29.DRR]
+
+
+Files Generated   : 3
+Documents Printed : 0
+
+Finished Output Generation At 10:46:14 AM On 3/14/2024

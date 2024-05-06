@@ -1,0 +1,86 @@
+Removed Pin From Net: NetName=LED_LEA Pin=IC1-2
+Removed Pin From Net: NetName=GND Pin=IC1-3
+Removed Pin From Net: NetName=LED_OEA Pin=IC1-4
+Removed Pin From Net: NetName=3V3 Pin=IC1-5
+Removed Pin From Net: NetName=LED_LEA Pin=U1-54
+Removed Pin From Net: NetName=GND Pin=U4-19
+Change Component Designator: OldDesignator=LED1A NewDesignator=LED6A
+Change Component Designator: OldDesignator=LED1B NewDesignator=LED6B
+Change Component Designator: OldDesignator=LED2A NewDesignator=LED1A
+Change Component Designator: OldDesignator=LED2B NewDesignator=LED1B
+Change Component Designator: OldDesignator=LED3A NewDesignator=LED7A
+Change Component Designator: OldDesignator=LED3B NewDesignator=LED7B
+Change Component Designator: OldDesignator=LED4A NewDesignator=LED2A
+Change Component Designator: OldDesignator=LED4B NewDesignator=LED2B
+Change Component Designator: OldDesignator=LED5A NewDesignator=LED8A
+Change Component Designator: OldDesignator=LED5B NewDesignator=LED8B
+Change Component Designator: OldDesignator=LED6A NewDesignator=LED3A
+Change Component Designator: OldDesignator=LED6B NewDesignator=LED3B
+Change Component Designator: OldDesignator=LED7A NewDesignator=LED4A
+Change Component Designator: OldDesignator=LED7B NewDesignator=LED4B
+Change Component Designator: OldDesignator=LED8A NewDesignator=LED5A
+Change Component Designator: OldDesignator=LED8B NewDesignator=LED5B
+Added Component: Designator=D1(FP_0805_LED_RED)
+Add component (AddParameter): Name = "Name"; Value = "FYLS-0805PGC"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "95-02-77"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=R5(FP_0805_RES)
+Add component (AddParameter): Name = "Name"; Value = "WR08X241JTL"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "81-30-08 "; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=GND Pin=D1-K
+Added Pin To Net: NetName=5V Pin=R5-2
+Added Pin To Net: NetName=LED_OEA Pin=U1-60
+Added Pin To Net: NetName=LED_LEA Pin=U1-62
+Change Net Name : Old Net Name=NetLED1A_3 New Net Name=NetLED6A_3
+Change Net Name : Old Net Name=NetLED1A_4 New Net Name=NetLED6A_4
+Change Net Name : Old Net Name=NetLED1B_3 New Net Name=NetLED6B_3
+Change Net Name : Old Net Name=NetLED1B_4 New Net Name=NetLED6B_4
+Change Net Name : Old Net Name=NetLED2A_2 New Net Name=NetLED1A_2
+Change Net Name : Old Net Name=NetLED2A_3 New Net Name=NetLED1A_3
+Change Net Name : Old Net Name=NetLED2A_4 New Net Name=NetLED1A_4
+Change Net Name : Old Net Name=NetLED2B_2 New Net Name=NetLED1B_2
+Change Net Name : Old Net Name=NetLED2B_3 New Net Name=NetLED1B_3
+Change Net Name : Old Net Name=NetLED2B_4 New Net Name=NetLED1B_4
+Change Net Name : Old Net Name=NetLED3A_2 New Net Name=NetLED7A_2
+Change Net Name : Old Net Name=NetLED3A_3 New Net Name=NetLED7A_3
+Change Net Name : Old Net Name=NetLED3A_4 New Net Name=NetLED7A_4
+Change Net Name : Old Net Name=NetLED3B_2 New Net Name=NetLED7B_2
+Change Net Name : Old Net Name=NetLED3B_3 New Net Name=NetLED7B_3
+Change Net Name : Old Net Name=NetLED3B_4 New Net Name=NetLED7B_4
+Change Net Name : Old Net Name=NetLED4A_2 New Net Name=NetLED2A_2
+Change Net Name : Old Net Name=NetLED4A_3 New Net Name=NetLED2A_3
+Change Net Name : Old Net Name=NetLED4A_4 New Net Name=NetLED2A_4
+Change Net Name : Old Net Name=NetLED4B_2 New Net Name=NetLED2B_2
+Change Net Name : Old Net Name=NetLED4B_3 New Net Name=NetLED2B_3
+Change Net Name : Old Net Name=NetLED4B_4 New Net Name=NetLED2B_4
+Change Net Name : Old Net Name=NetLED5A_2 New Net Name=NetLED8A_2
+Change Net Name : Old Net Name=NetLED5A_3 New Net Name=NetLED8A_3
+Change Net Name : Old Net Name=NetLED5A_4 New Net Name=NetLED8A_4
+Change Net Name : Old Net Name=NetLED5B_2 New Net Name=NetLED8B_2
+Change Net Name : Old Net Name=NetLED5B_3 New Net Name=NetLED8B_3
+Change Net Name : Old Net Name=NetLED5B_4 New Net Name=NetLED8B_4
+Change Net Name : Old Net Name=NetLED6A_2 New Net Name=NetLED3A_2
+Change Net Name : Old Net Name=NetLED6A_3 New Net Name=NetLED3A_3
+Change Net Name : Old Net Name=NetLED6A_4 New Net Name=NetLED3A_4
+Change Net Name : Old Net Name=NetLED6B_2 New Net Name=NetLED3B_2
+Change Net Name : Old Net Name=NetLED6B_3 New Net Name=NetLED3B_3
+Change Net Name : Old Net Name=NetLED6B_4 New Net Name=NetLED3B_4
+Change Net Name : Old Net Name=NetLED7A_2 New Net Name=NetLED4A_2
+Change Net Name : Old Net Name=NetLED7A_3 New Net Name=NetLED4A_3
+Change Net Name : Old Net Name=NetLED7A_4 New Net Name=NetLED4A_4
+Change Net Name : Old Net Name=NetLED7B_2 New Net Name=NetLED4B_2
+Change Net Name : Old Net Name=NetLED7B_3 New Net Name=NetLED4B_3
+Change Net Name : Old Net Name=NetLED7B_4 New Net Name=NetLED4B_4
+Change Net Name : Old Net Name=NetLED8A_2 New Net Name=NetLED5A_2
+Change Net Name : Old Net Name=NetLED8A_3 New Net Name=NetLED5A_3
+Change Net Name : Old Net Name=NetLED8A_4 New Net Name=NetLED5A_4
+Change Net Name : Old Net Name=NetLED8B_2 New Net Name=NetLED5B_2
+Change Net Name : Old Net Name=NetLED8B_3 New Net Name=NetLED5B_3
+Change Net Name : Old Net Name=NetLED8B_4 New Net Name=NetLED5B_4
+Added Pin To Net: NetName=NetD1_1 Pin=R5-1
+Added Pin To Net: NetName=NetD1_1 Pin=D1-A
+Added Net: Name=NetD1_1
+Added Pin To Net: NetName=SPI1_NSS Pin=U1-32
+Added Pin To Net: NetName=SPI1_NSS Pin=U4-19
+Added Net: Name=SPI1_NSS

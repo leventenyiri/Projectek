@@ -1,0 +1,6 @@
+Added Component: Designator=Z1(SOD2512X115N)
+Add component (AddParameter): Name = "Name"; Value = "BZT52C6V2S"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "85-02-89"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=5V Pin=Z1-1
+Added Pin To Net: NetName=GND Pin=Z1-2

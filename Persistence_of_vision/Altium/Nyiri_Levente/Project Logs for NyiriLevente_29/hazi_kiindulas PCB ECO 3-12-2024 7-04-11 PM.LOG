@@ -1,0 +1,13 @@
+Change Component Footprint: Designator=D1 Old Footprint=FP_0805_LED_GREEN New Footprint=FP_0805_LED_RED
+Change Component Designator: OldDesignator=R2A NewDesignator=R3A
+Change Component Designator: OldDesignator=R2B NewDesignator=R3B
+Change Component Designator: OldDesignator=R3A NewDesignator=R2A
+Change Component Designator: OldDesignator=R3B NewDesignator=R2B
+Change component parameters: Designator = "R5" ("R5"); Footprint = "FP_0805_RES"; UniqueID = "\MTZUNBUF\PEECHZPB" ("\MTZUNBUF\PEECHZPB")
+Change component parameters (AddParameter): Name = "Name"; Value = "WR08X241JTL"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Reference"; Value = "81-30-08"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Change Net Name : Old Net Name=NetR2A_2 New Net Name=NetR3A_2
+Change Net Name : Old Net Name=NetR2B_2 New Net Name=NetR3B_2
+Change Net Name : Old Net Name=NetR3A_2 New Net Name=NetR2A_2
+Change Net Name : Old Net Name=NetR3B_2 New Net Name=NetR2B_2

@@ -26,6 +26,7 @@
 #include "stm32f4xx_nucleo_bus.h"
 #include "ASCII.h"
 #include <stdlib.h>
+#include <elapsed_time.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,6 +51,7 @@
 SPI_HandleTypeDef hspi2;
 
 TIM_HandleTypeDef htim2;
+TIM_HandleTypeDef htim10;
 
 UART_HandleTypeDef huart2;
 
@@ -85,7 +87,7 @@ typedef struct {
 } Displacement;
 
 
-#define BUFFER_SIZE 3000
+#define BUFFER_SIZE 1000
 #define DISP_BUFFER_SIZE 200
 #define WINDOW_SIZE 10
 volatile Data Buffer[BUFFER_SIZE] = {0};
@@ -100,7 +102,7 @@ uint8_t first_column = TRUE;
 double abs_velocity = 0;
 
 double k;
-int max_range_index = 44;
+int max_range_index = 27;
 int disp_array_idx = 0;
 
 volatile double movAvgSum = 0; // Sum for moving average calculation
@@ -130,6 +132,16 @@ double filtered_velocity = 0;
 double delay = 0;
 int delay_cnt = 0;
 uint8_t delay_flag = FALSE;
+int range_index = 0;
+
+double start_point = 0.0;
+uint8_t last_direction = 0;
+
+uint8_t first_positive_velocity_detected = FALSE;
+const double VELOCITY_THRESHOLD = 10000.0;
+
+volatile int write_cnt = 0;
+volatile int read_cnt = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -138,6 +150,7 @@ static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_TIM2_Init(void);
+static void MX_TIM10_Init(void);
 /* USER CODE BEGIN PFP */
 static void MEMS_Init(void);
 /* USER CODE END PFP */
@@ -274,8 +287,8 @@ void OutputDisable(void) {
 
 void LatchEnable(void) {
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);   // Set PB1 high
-	HAL_Delay(1);  // Short delay to ensure the latch pulse is detected
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET); // Set PB1 low again
+	//HAL_Delay(1);  // Short delay to ensure the latch pulse is detected
+	//HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET); // Set PB1 low again
 }
 
 
@@ -283,7 +296,6 @@ void SendLEDData(uint8_t *data) {
 	for (int i = 5; i >= 0; i--) {  // Loop through data array backward
 		HAL_SPI_Transmit(&hspi2, &data[i], 1, 100);  // Send 1 byte per driver
 	}
-	LatchEnable();  // Latch data once all have been transmitted
 }
 
 void CombineLEDData(uint8_t *result, uint8_t ledIdx) {
@@ -303,6 +315,7 @@ void ShiftLEDData(uint8_t *result, uint8_t ledIdx) {
 }
 
 void CombineAndSendNEW(uint16_t ledMask,uint8_t color) {
+
 
 	//if the value of a variable is 1, concatenate that LED into the sum
 	char a = (ledMask & 0b1000000000000000) >> 15;
@@ -386,6 +399,7 @@ void CombineAndSendNEW(uint16_t ledMask,uint8_t color) {
 	}
 
 	SendLEDData(LED);
+
 }
 
 int32_t wrap_platform_read(uint8_t Address, uint8_t Reg, uint8_t *Bufp,
@@ -407,58 +421,54 @@ int32_t wrap_platform_write(uint8_t Address, uint8_t Reg, uint8_t *Bufp,
 	return 0;
 }
 
-int calculateDisplayIndex(double displacement, double middlePoint, uint8_t positiveVelocity) {
-    double k = (max_displacement / 2.0) / 45.0;
+void updateStartPoint(double new_start) {
+    start_point = new_start;
+}
+
+int calculateDisplayIndex(double displacement) {
+    double k = max_displacement / 154.0; // Total range divided into 90 segments (77 each way)
     int range_index;
 
-    if (positiveVelocity == TRUE) {
-        range_index = (int)(displacement / k);
-    } else {
-        range_index = (int)((displacement - middlePoint) / k); //The middlePoint needs to be
-        //substracted, because i want to have 45 equal segments for the forward and the
-        //backward motion too, if im moving backward i want the start of the backward motion
-        //to be 0
-        range_index = max_range_index - range_index; // Reverse the index
+    // Calculate relative displacement from the current start point
+    double relative_displacement = displacement - start_point;
+
+    if (last_direction == 0) { // Forward motion
+        range_index = (int)(relative_displacement / k);
+    } else { // Backward motion
+        range_index = 77 - (int)(relative_displacement / k);  // Reverse index for backward motion
     }
 
     // Clamping the range index to allowed values
     if (range_index < 0) range_index = 0;
-    if (range_index > max_range_index) range_index = max_range_index;
+    if (range_index > 77) range_index = 77;  // Clamp to max index for 45 segments
+
     return range_index;
 }
 
-void sendDisplayData(uint16_t (*ASCII)[9], int index) {
-    int disp_array_idx = index / 8;
-    int send_index = index % 8;
+void sendDisplayData(uint16_t (*ASCII)[11], int index) {
+    int disp_array_idx = index / 11;
+    int send_index = index % 11;
+
     CombineAndSendNEW(ASCII[disp_array_idx][send_index], red);
+
 }
 
-void clearDisplayIfNeeded(uint8_t *flag) {
-    if (*flag == TRUE) {
-        SendLEDData(LED_CLEAR);
-        SendLEDData(LED_CLEAR);
-        *flag = FALSE;  // Reset the flag after clearing
+void Display(uint16_t (*ASCII)[11]) {
+    // Check and handle velocity zero crossing
+
+    uint8_t current_direction = (centered_velocity > 0) ? 0 : 1;  // 0 for positive, 1 for negative
+    if (current_direction != last_direction) {
+        start_point = current_displacement;
+        last_direction = current_direction;
     }
-}
 
-void Display(uint16_t (*ASCII)[9]) {
-    // Ensure the display is cleared if needed before any new updates
-    clearDisplayIfNeeded(&first_column);
+    // Calculate the index for display based on the updated start point and current displacement
+    range_index = calculateDisplayIndex(current_displacement);
 
-    uint8_t isVelocityPositive = (centered_velocity > 0) ? TRUE : FALSE;
-    int range_index = calculateDisplayIndex(current_displacement, middle_point, isVelocityPositive);
-
+    // Send the character data corresponding to the calculated index to the display
     sendDisplayData(ASCII, range_index);
 
-    // Update the middle point if the velocity was positive
-    if (isVelocityPositive == TRUE) {
-        middle_point = current_displacement;
-    }
-
-    // Prepare for the next display update
-    first_column = TRUE;  // Ensure the flag is reset for the next cycle
 }
-
 
 
 // Update mean and center data dynamically
@@ -486,7 +496,8 @@ void updateBuffer(double acc_data, int index) {
 // Timer interrupt callback function
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if (htim->Instance == TIM2) {
-        LSM6DSL_Axes_t acc_axes;
+    	elapsed_time_start(1);
+    	LSM6DSL_Axes_t acc_axes;
         LSM6DSL_ACC_GetAxes(&MotionSensor, &acc_axes);  // Get new accelerometer data
 
         // Update the buffer with the new accelerometer data
@@ -494,6 +505,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
         // Set flag to indicate new data is available or some other processing needs to be done
         timer_flag = TRUE;
+        elapsed_time_stop(1);
     }
 }
 
@@ -547,33 +559,65 @@ void handleZeroCrossings(double last_vel, double centered_vel) {
 
 
 void update_motion(double new_acceleration, double new_time, double delta_t) {
-    static double velocity_buffer[WINDOW_SIZE] = {0};
-    static int buffer_index = 0;
     static int samples_collected = 0;
+    const double VELOCITY_THRESHOLD = 10000.0;  // Velocity threshold to start displacement
 
+    // Calculate average and filtered velocities
     double avg_acceleration = calculateAverageAcceleration(last_acceleration, new_acceleration);
     current_velocity += avg_acceleration * delta_t;
     double filtered_velocity = updateAndFilterVelocity(current_velocity, delta_t, avg_acceleration, &samples_collected);
     double baseline = updateBaseline(filtered_velocity);
 
+    // Center the velocity by subtracting the baseline
     centered_velocity = filtered_velocity - baseline;
 
-    velocity_buffer[buffer_index] = centered_velocity;
-    buffer_index = (buffer_index + 1) % WINDOW_SIZE;
-    if (samples_collected < WINDOW_SIZE) {
-           samples_collected++;
-       }
+    // Start updating displacement only if the centered velocity exceeds the threshold
+    // and it's the first time it's detected
+    if (!first_positive_velocity_detected && centered_velocity > VELOCITY_THRESHOLD) {
+        first_positive_velocity_detected = TRUE;
+        current_displacement = 0;  // This is needed to make sure the displacement
+        //period starts with a positive velocity
+    }
 
-    updateVelocityAndDisplacement(last_velocity, centered_velocity, delta_t);
-    handleZeroCrossings(last_velocity, centered_velocity);
+    // Only update displacement if the first positive velocity has been detected
+    if (first_positive_velocity_detected) {
+        updateVelocityAndDisplacement(last_velocity, centered_velocity, delta_t);
+        handleZeroCrossings(last_velocity, centered_velocity);
+    }
 
+
+
+    // Update last values for the next iteration
     last_acceleration = new_acceleration;
     last_velocity = centered_velocity;
-
     read_idx = (read_idx + 1) % BUFFER_SIZE;
 }
 
+void Timer_Start() {
+    __HAL_TIM_SET_COUNTER(&htim10, 0);  // Reset counter to 0
+    HAL_TIM_Base_Start(&htim10);
+}
 
+// Stop the timer and read the value
+uint32_t Timer_Stop() {
+    HAL_TIM_Base_Stop(&htim10);
+    return __HAL_TIM_GET_COUNTER(&htim10);
+}
+
+void overflow_check(){
+	if(read_idx == BUFFER_SIZE-1){
+		read_cnt++;
+	}
+	if(write_idx == BUFFER_SIZE-1){
+		write_cnt++;
+	}
+	if(write_idx-read_idx >= BUFFER_SIZE-50){
+		CombineAndSendNEW(0xFFFF,red);
+	}
+	if(write_idx-read_idx >= 100){
+		CombineAndSendNEW(0xFFFF,red);
+	}
+}
 /* USER CODE END 0 */
 
 /**
@@ -584,7 +628,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+  elapsed_time_init();
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -608,6 +652,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_SPI2_Init();
   MX_TIM2_Init();
+  MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
   OutputDisable();  // Disable outputs during initialization
   SendLEDData(LED_CLEAR);
@@ -622,13 +667,17 @@ int main(void)
 
   HAL_TIM_Base_Start_IT(&htim2);
 
+  LatchEnable();
 
 
-  uint16_t ASCII_ARRAY[5][9];
+
+  uint16_t ASCII_ARRAY[7][11];
 
 	for (int i = 0; i < 7; i++) {
-		for (int j = 0; j < 9; j++) {
+		for (int j = 0; j < 11; j++) {
 
+			if (i == 0)
+				ASCII_ARRAY[i][j] = 0;
 			if (i == 1)
 				ASCII_ARRAY[i][j] = E[j];
 			if (i == 2)
@@ -639,6 +688,8 @@ int main(void)
 				ASCII_ARRAY[i][j] = K[j];
 			if (i == 5)
 				ASCII_ARRAY[i][j] = A[j];
+			if (i == 6)
+				ASCII_ARRAY[i][j] = 0;
 			}
 	}
 
@@ -650,29 +701,30 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	while (1) {
 
-		//Every 0.5ms write out the x axis value
+
 		if (timer_flag == TRUE) {
+
+			elapsed_time_start(0);
+
+			overflow_check();
 
 			update_motion(Buffer[read_idx].acc_axes_x, Buffer[read_idx].cnt,1);
 
+			if (disp_usable) {
+				Display(ASCII_ARRAY);
+			}
+
+
+/*
 			printf("%f %f %f %d\r\n", Buffer[read_idx].acc_axes_x,
 				centered_velocity, current_displacement,
-			Buffer[read_idx].cnt);
-
-			if(zeroCrossing == 0){
-				CombineAndSendNEW(0xFFFF,red);
-			}
-			else{
-				CombineAndSendNEW(0x0,red);
-			}
-
+			Buffer[read_idx].cnt); */
 
 			timer_flag = FALSE;
+			elapsed_time_stop(0);
 		}
 
-		if (disp_usable || zeroCrossing == 0) {
-		//	Display(ASCII_ARRAY);
-		}
+
 
     /* USER CODE END WHILE */
 
@@ -785,9 +837,9 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 8400-1;
+  htim2.Init.Prescaler = 20;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 9;
+  htim2.Init.Period = 999;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
@@ -808,6 +860,37 @@ static void MX_TIM2_Init(void)
   /* USER CODE BEGIN TIM2_Init 2 */
 
   /* USER CODE END TIM2_Init 2 */
+
+}
+
+/**
+  * @brief TIM10 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM10_Init(void)
+{
+
+  /* USER CODE BEGIN TIM10_Init 0 */
+
+  /* USER CODE END TIM10_Init 0 */
+
+  /* USER CODE BEGIN TIM10_Init 1 */
+
+  /* USER CODE END TIM10_Init 1 */
+  htim10.Instance = TIM10;
+  htim10.Init.Prescaler = 0;
+  htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim10.Init.Period = 0xFFFF;
+  htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim10.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim10) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM10_Init 2 */
+
+  /* USER CODE END TIM10_Init 2 */
 
 }
 
@@ -880,12 +963,19 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LED_LE_Pin LED_OE_Pin */
-  GPIO_InitStruct.Pin = LED_LE_Pin|LED_OE_Pin;
+  /*Configure GPIO pin : LED_LE_Pin */
+  GPIO_InitStruct.Pin = LED_LE_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(LED_LE_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : LED_OE_Pin */
+  GPIO_InitStruct.Pin = LED_OE_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(LED_OE_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : LSM6DSL_INT1_EXTI11_Pin */
   GPIO_InitStruct.Pin = LSM6DSL_INT1_EXTI11_Pin;
@@ -929,7 +1019,7 @@ static void MEMS_Init(void)
   LSM6DSL_Init(&MotionSensor);
 
   /* Configure the LSM6DSL accelerometer (ODR, scale and interrupt) */
-  LSM6DSL_ACC_SetOutputDataRate(&MotionSensor, 1660.0f); /* 1660 Hz */
+  LSM6DSL_ACC_SetOutputDataRate(&MotionSensor, 1660.0f); /* 3330 Hz */
   LSM6DSL_ACC_SetFullScale(&MotionSensor, 8);          /* [-4000mg; +4000mg]  old*/
   LSM6DSL_ACC_Set_INT1_DRDY(&MotionSensor, ENABLE);    /* Enable DRDY */
   LSM6DSL_ACC_GetAxesRaw(&MotionSensor, &axes);        /* Clear DRDY */

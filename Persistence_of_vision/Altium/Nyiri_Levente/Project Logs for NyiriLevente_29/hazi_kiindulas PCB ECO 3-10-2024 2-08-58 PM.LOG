@@ -1,0 +1,13 @@
+Removed Pin From Net: NetName=5V Pin=C2A-2
+Removed Pin From Net: NetName=5V Pin=C2B-2
+Removed Pin From Net: NetName=5V Pin=U3A-16
+Removed Pin From Net: NetName=5V Pin=U3B-16
+Change Component Designator: OldDesignator=IC? NewDesignator=IC1
+Added Pin To Net: NetName=3V3 Pin=C2A-2
+Added Pin To Net: NetName=3V3 Pin=C2B-2
+Added Pin To Net: NetName=3V3 Pin=C3A-2
+Added Pin To Net: NetName=3V3 Pin=C3B-2
+Added Pin To Net: NetName=3V3 Pin=U2A-16
+Added Pin To Net: NetName=3V3 Pin=U2B-16
+Added Pin To Net: NetName=3V3 Pin=U3A-16
+Added Pin To Net: NetName=3V3 Pin=U3B-16

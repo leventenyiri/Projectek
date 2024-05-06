@@ -1,0 +1,14 @@
+Project Outputs Generation Report
+---------------------------------
+Start Output Generation At 10:48:14 AM On 3/14/2024
+
+Output: Bill of Materials
+Type  : BOM
+From  : Project [NyiriLevente_29.PrjPcb]
+   Generated File[NyiriLevente_29.xlsx]
+
+
+Files Generated   : 1
+Documents Printed : 0
+
+Finished Output Generation At 10:48:17 AM On 3/14/2024

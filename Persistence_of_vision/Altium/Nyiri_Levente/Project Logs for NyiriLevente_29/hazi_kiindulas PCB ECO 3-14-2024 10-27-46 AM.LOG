@@ -1,0 +1,21 @@
+Removed Pin From Net: NetName=GND Pin=D1-K
+Added Pin To Net: NetName=GND Pin=F1-2
+Added Pin To Net: NetName=GND Pin=LED1A-1
+Added Pin To Net: NetName=GND Pin=LED1B-1
+Added Pin To Net: NetName=GND Pin=LED2A-1
+Added Pin To Net: NetName=GND Pin=LED2B-1
+Added Pin To Net: NetName=GND Pin=LED3A-1
+Added Pin To Net: NetName=GND Pin=LED3B-1
+Added Pin To Net: NetName=GND Pin=LED4A-1
+Added Pin To Net: NetName=GND Pin=LED4B-1
+Added Pin To Net: NetName=GND Pin=LED5A-1
+Added Pin To Net: NetName=GND Pin=LED5B-1
+Added Pin To Net: NetName=GND Pin=LED6A-1
+Added Pin To Net: NetName=GND Pin=LED6B-1
+Added Pin To Net: NetName=GND Pin=LED7A-1
+Added Pin To Net: NetName=GND Pin=LED7B-1
+Added Pin To Net: NetName=GND Pin=LED8A-1
+Added Pin To Net: NetName=GND Pin=LED8B-1
+Added Pin To Net: NetName=GND Pin=U1-6
+Added Pin To Net: NetName=GND Pin=Z1-1
+Change Net Name : Old Net Name=GND New Net Name=5V

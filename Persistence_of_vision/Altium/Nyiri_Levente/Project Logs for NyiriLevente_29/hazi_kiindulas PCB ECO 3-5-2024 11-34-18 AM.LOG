@@ -1,0 +1,12 @@
+Added Component: Designator=C4(FP_0805_CAP_085)
+Add component (AddParameter): Name = "Name"; Value = "0805B104K500NT"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "82-13-46"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=Z1(SOD2512X115N)
+Add component (AddParameter): Name = "Name"; Value = "BZT52C6V2S"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "85-02-89"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=3V3 Pin=C4-1
+Added Pin To Net: NetName=GND Pin=C4-2
+Added Pin To Net: NetName=5V Pin=Z1-1
+Added Pin To Net: NetName=GND Pin=Z1-2

@@ -1,0 +1,457 @@
+Added Component: Designator=C1A(FP_0805_CAP_085)
+Add component (AddParameter): Name = "Name"; Value = "0805B104K500NT"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "82-13-46"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=C1B(FP_0805_CAP_085)
+Add component (AddParameter): Name = "Name"; Value = "0805B104K500NT"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "82-13-46"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=C2A(FP_0805_CAP_085)
+Add component (AddParameter): Name = "Name"; Value = "0805B104K500NT"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "82-13-46"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=C2B(FP_0805_CAP_085)
+Add component (AddParameter): Name = "Name"; Value = "0805B104K500NT"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "82-13-46"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=C3A(FP_0805_CAP_085)
+Add component (AddParameter): Name = "Name"; Value = "0805B104K500NT"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "82-13-46"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=C3B(FP_0805_CAP_085)
+Add component (AddParameter): Name = "Name"; Value = "0805B104K500NT"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "82-13-46"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=C4(FP_0805_CAP_085)
+Add component (AddParameter): Name = "Name"; Value = "0805B104K500NT"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "82-13-46"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=F1(1812L125/16DR2.0)
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "https://datasheet.ciiva.com:443/pdfs/VipMasterIC/IC/LFSI/LFSI-S-A0007892087/LFSI-S-A0007892087-1.pdf?src-supplier=IHS+Markit"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = "https://datasheet.ciiva.com:443/pdfs/VipMasterIC/IC/LFSI/LFSI-S-A0007892087/LFSI-S-A0007892087-1.pdf?src-supplier=IHS+Markit"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2Description"; Value = "https://datasheet.ciiva.com/12541/littelfuse-ptc-1812l-12541791.pdf?src-supplier=Mouser"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2URL"; Value = "https://datasheet.ciiva.com/12541/littelfuse-ptc-1812l-12541791.pdf?src-supplier=Mouser"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink3Description"; Value = "https://datasheet.ciiva.com/1273/48544-1273746.pdf?src-supplier=Element14"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink3URL"; Value = "https://datasheet.ciiva.com/1273/48544-1273746.pdf?src-supplier=Element14"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink4Description"; Value = "https://datasheet.ciiva.com/326/littelfuse-ptc-1812l-326975.pdf?src-supplier=Digikey"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink4URL"; Value = "https://datasheet.ciiva.com/326/littelfuse-ptc-1812l-326975.pdf?src-supplier=Digikey"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink5Description"; Value = "https://datasheet.ciiva.com/326/littelfuse-ptc-1812l-326976.pdf?src-supplier=Digikey"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink5URL"; Value = "https://datasheet.ciiva.com/326/littelfuse-ptc-1812l-326976.pdf?src-supplier=Digikey"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink6Description"; Value = "https://datasheet.ciiva.com/326/littelfuse-ptc-1812l-326977.pdf?src-supplier=Digikey"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink6URL"; Value = "https://datasheet.ciiva.com/326/littelfuse-ptc-1812l-326977.pdf?src-supplier=Digikey"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Name"; Value = "1812L125/16DR"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "44-04-71"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=J1(FP_DC_TAP_ANYA)
+Add component (AddParameter): Name = "Name"; Value = "TÁP DC ANYA 5.5/2.1/9.5mm DCS-5521-5"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "43-07-67"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=LED1A(150141M173100)
+Add component (AddParameter): Name = "Name"; Value = "FYLS-3528RGBC-CA"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "95-03-52"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=LED1B(150141M173100)
+Add component (AddParameter): Name = "Name"; Value = "FYLS-3528RGBC-CA"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "95-03-52"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=LED2A(150141M173100)
+Add component (AddParameter): Name = "Name"; Value = "FYLS-3528RGBC-CA"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "95-03-52"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=LED2B(150141M173100)
+Add component (AddParameter): Name = "Name"; Value = "FYLS-3528RGBC-CA"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "95-03-52"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=LED3A(150141M173100)
+Add component (AddParameter): Name = "Name"; Value = "FYLS-3528RGBC-CA"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "95-03-52"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=LED3B(150141M173100)
+Add component (AddParameter): Name = "Name"; Value = "FYLS-3528RGBC-CA"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "95-03-52"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=LED4A(150141M173100)
+Add component (AddParameter): Name = "Name"; Value = "FYLS-3528RGBC-CA"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "95-03-52"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=LED4B(150141M173100)
+Add component (AddParameter): Name = "Name"; Value = "FYLS-3528RGBC-CA"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "95-03-52"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=LED5A(150141M173100)
+Add component (AddParameter): Name = "Name"; Value = "FYLS-3528RGBC-CA"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "95-03-52"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=LED5B(150141M173100)
+Add component (AddParameter): Name = "Name"; Value = "FYLS-3528RGBC-CA"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "95-03-52"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=LED6A(150141M173100)
+Add component (AddParameter): Name = "Name"; Value = "FYLS-3528RGBC-CA"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "95-03-52"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=LED6B(150141M173100)
+Add component (AddParameter): Name = "Name"; Value = "FYLS-3528RGBC-CA"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "95-03-52"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=LED7A(150141M173100)
+Add component (AddParameter): Name = "Name"; Value = "FYLS-3528RGBC-CA"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "95-03-52"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=LED7B(150141M173100)
+Add component (AddParameter): Name = "Name"; Value = "FYLS-3528RGBC-CA"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "95-03-52"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=LED8A(150141M173100)
+Add component (AddParameter): Name = "Name"; Value = "FYLS-3528RGBC-CA"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "95-03-52"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=LED8B(150141M173100)
+Add component (AddParameter): Name = "Name"; Value = "FYLS-3528RGBC-CA"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "95-03-52"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=R1A(FP_0805_RES)
+Add component (AddParameter): Name = "Name"; Value = "CR-05JL7"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "81-10-87"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=R1B(FP_0805_RES)
+Add component (AddParameter): Name = "Name"; Value = "CR-05JL7"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "81-10-87"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=R2A(FP_0805_RES)
+Add component (AddParameter): Name = "Name"; Value = "CR-05JL7"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "81-10-87"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=R2B(FP_0805_RES)
+Add component (AddParameter): Name = "Name"; Value = "CR-05JL7"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "81-10-87"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=R3A(FP_0805_RES)
+Add component (AddParameter): Name = "Name"; Value = "CR-05JL7"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "81-10-87"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=R3B(FP_0805_RES)
+Add component (AddParameter): Name = "Name"; Value = "CR-05JL7"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "81-10-87"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "Lomex"; VariantName = "[No Variations]"
+Added Component: Designator=U1A(TSOP65P640X120-16M)
+Add component (AddParameter): Name = "Name"; Value = "STP08CP05TTR"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "Tanszék"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "ST"; VariantName = "[No Variations]"
+Added Component: Designator=U1B(TSOP65P640X120-16M)
+Add component (AddParameter): Name = "Name"; Value = "STP08CP05TTR"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "Tanszék"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "ST"; VariantName = "[No Variations]"
+Added Component: Designator=U2A(TSOP65P640X120-16M)
+Add component (AddParameter): Name = "Name"; Value = "STP08CP05TTR"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "Tanszék"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "ST"; VariantName = "[No Variations]"
+Added Component: Designator=U2B(TSOP65P640X120-16M)
+Add component (AddParameter): Name = "Name"; Value = "STP08CP05TTR"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "Tanszék"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "ST"; VariantName = "[No Variations]"
+Added Component: Designator=U3A(TSOP65P640X120-16M)
+Add component (AddParameter): Name = "Name"; Value = "STP08CP05TTR"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "Tanszék"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "ST"; VariantName = "[No Variations]"
+Added Component: Designator=U3B(TSOP65P640X120-16M)
+Add component (AddParameter): Name = "Name"; Value = "STP08CP05TTR"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "Tanszék"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "ST"; VariantName = "[No Variations]"
+Added Component: Designator=U4(FP_DIL24)
+Add component (AddParameter): Name = "Name"; Value = "MKI178V2"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Reference"; Value = "Tanszék"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "ST"; VariantName = "[No Variations]"
+Add Component: Footprint Not Found SOD3716X135N
+Added Pin To Net: NetName=3V3 Pin=C1A-2
+Added Pin To Net: NetName=3V3 Pin=C1B-2
+Added Pin To Net: NetName=3V3 Pin=C4-1
+Added Pin To Net: NetName=3V3 Pin=U1-16
+Added Pin To Net: NetName=3V3 Pin=U1A-16
+Added Pin To Net: NetName=3V3 Pin=U1B-16
+Added Pin To Net: NetName=3V3 Pin=U4-1
+Added Pin To Net: NetName=3V3 Pin=U4-2
+Added Net: Name=3V3
+Added Pin To Net: NetName=5V Pin=C2A-2
+Added Pin To Net: NetName=5V Pin=C2B-2
+Added Pin To Net: NetName=5V Pin=F1-2
+Added Pin To Net: NetName=5V Pin=LED1A-1
+Added Pin To Net: NetName=5V Pin=LED1B-1
+Added Pin To Net: NetName=5V Pin=LED2A-1
+Added Pin To Net: NetName=5V Pin=LED2B-1
+Added Pin To Net: NetName=5V Pin=LED3A-1
+Added Pin To Net: NetName=5V Pin=LED3B-1
+Added Pin To Net: NetName=5V Pin=LED4A-1
+Added Pin To Net: NetName=5V Pin=LED4B-1
+Added Pin To Net: NetName=5V Pin=LED5A-1
+Added Pin To Net: NetName=5V Pin=LED5B-1
+Added Pin To Net: NetName=5V Pin=LED6A-1
+Added Pin To Net: NetName=5V Pin=LED6B-1
+Added Pin To Net: NetName=5V Pin=LED7A-1
+Added Pin To Net: NetName=5V Pin=LED7B-1
+Added Pin To Net: NetName=5V Pin=LED8A-1
+Added Pin To Net: NetName=5V Pin=LED8B-1
+Added Pin To Net: NetName=5V Pin=U1-6
+Added Pin To Net: NetName=5V Pin=U3A-16
+Added Pin To Net: NetName=5V Pin=U3B-16
+Added Net: Name=5V
+Added Pin To Net: NetName=D6_2A Pin=LED1A-2
+Added Pin To Net: NetName=D6_2A Pin=U2A-12
+Added Net: Name=D6_2A
+Added Pin To Net: NetName=D6_2B Pin=LED1B-2
+Added Pin To Net: NetName=D6_2B Pin=U2B-12
+Added Net: Name=D6_2B
+Added Pin To Net: NetName=GND Pin=C1A-1
+Added Pin To Net: NetName=GND Pin=C1B-1
+Added Pin To Net: NetName=GND Pin=C2A-1
+Added Pin To Net: NetName=GND Pin=C2B-1
+Added Pin To Net: NetName=GND Pin=C3A-1
+Added Pin To Net: NetName=GND Pin=C3B-1
+Added Pin To Net: NetName=GND Pin=C4-2
+Added Pin To Net: NetName=GND Pin=J1-2
+Added Pin To Net: NetName=GND Pin=J1-3
+Added Pin To Net: NetName=GND Pin=R1A-1
+Added Pin To Net: NetName=GND Pin=R1B-1
+Added Pin To Net: NetName=GND Pin=R2A-1
+Added Pin To Net: NetName=GND Pin=R2B-1
+Added Pin To Net: NetName=GND Pin=R3A-1
+Added Pin To Net: NetName=GND Pin=R3B-1
+Added Pin To Net: NetName=GND Pin=U1-8
+Added Pin To Net: NetName=GND Pin=U1-19
+Added Pin To Net: NetName=GND Pin=U1-20
+Added Pin To Net: NetName=GND Pin=U1-22
+Added Pin To Net: NetName=GND Pin=U1-47
+Added Pin To Net: NetName=GND Pin=U1-58
+Added Pin To Net: NetName=GND Pin=U1-70
+Added Pin To Net: NetName=GND Pin=U1A-1
+Added Pin To Net: NetName=GND Pin=U1B-1
+Added Pin To Net: NetName=GND Pin=U2A-1
+Added Pin To Net: NetName=GND Pin=U2B-1
+Added Pin To Net: NetName=GND Pin=U3A-1
+Added Pin To Net: NetName=GND Pin=U3B-1
+Added Pin To Net: NetName=GND Pin=U4-4
+Added Pin To Net: NetName=GND Pin=U4-5
+Added Pin To Net: NetName=GND Pin=U4-13
+Added Net: Name=GND
+Added Pin To Net: NetName=LED_CLKA Pin=U1-68
+Added Pin To Net: NetName=LED_CLKA Pin=U1A-3
+Added Pin To Net: NetName=LED_CLKA Pin=U1B-3
+Added Pin To Net: NetName=LED_CLKA Pin=U2A-3
+Added Pin To Net: NetName=LED_CLKA Pin=U2B-3
+Added Pin To Net: NetName=LED_CLKA Pin=U3A-3
+Added Pin To Net: NetName=LED_CLKA Pin=U3B-3
+Added Net: Name=LED_CLKA
+Added Pin To Net: NetName=LED_LEA Pin=U1-62
+Added Pin To Net: NetName=LED_LEA Pin=U1A-4
+Added Pin To Net: NetName=LED_LEA Pin=U1B-4
+Added Pin To Net: NetName=LED_LEA Pin=U2A-4
+Added Pin To Net: NetName=LED_LEA Pin=U2B-4
+Added Pin To Net: NetName=LED_LEA Pin=U3A-4
+Added Pin To Net: NetName=LED_LEA Pin=U3B-4
+Added Net: Name=LED_LEA
+Added Pin To Net: NetName=LED_OEA Pin=U1-60
+Added Pin To Net: NetName=LED_OEA Pin=U1A-13
+Added Pin To Net: NetName=LED_OEA Pin=U1B-13
+Added Pin To Net: NetName=LED_OEA Pin=U2A-13
+Added Pin To Net: NetName=LED_OEA Pin=U2B-13
+Added Pin To Net: NetName=LED_OEA Pin=U3A-13
+Added Pin To Net: NetName=LED_OEA Pin=U3B-13
+Added Net: Name=LED_OEA
+Added Pin To Net: NetName=LED_SDIA Pin=U1A-2
+Added Pin To Net: NetName=LED_SDIA Pin=U3B-14
+Added Net: Name=LED_SDIA
+Added Pin To Net: NetName=LED_SDIB Pin=U1-64
+Added Pin To Net: NetName=LED_SDIB Pin=U1B-2
+Added Net: Name=LED_SDIB
+Added Pin To Net: NetName=NetC3A_2 Pin=C3A-2
+Added Pin To Net: NetName=NetC3A_2 Pin=U2A-16
+Added Net: Name=NetC3A_2
+Added Pin To Net: NetName=NetC3B_2 Pin=C3B-2
+Added Pin To Net: NetName=NetC3B_2 Pin=U2B-16
+Added Net: Name=NetC3B_2
+Added Pin To Net: NetName=NetF1_1 Pin=F1-1
+Added Pin To Net: NetName=NetF1_1 Pin=J1-1
+Added Net: Name=NetF1_1
+Added Pin To Net: NetName=NetLED1A_3 Pin=LED1A-3
+Added Pin To Net: NetName=NetLED1A_3 Pin=U3A-5
+Added Net: Name=NetLED1A_3
+Added Pin To Net: NetName=NetLED1A_4 Pin=LED1A-4
+Added Pin To Net: NetName=NetLED1A_4 Pin=U3A-6
+Added Net: Name=NetLED1A_4
+Added Pin To Net: NetName=NetLED1B_3 Pin=LED1B-3
+Added Pin To Net: NetName=NetLED1B_3 Pin=U3B-5
+Added Net: Name=NetLED1B_3
+Added Pin To Net: NetName=NetLED1B_4 Pin=LED1B-4
+Added Pin To Net: NetName=NetLED1B_4 Pin=U3B-6
+Added Net: Name=NetLED1B_4
+Added Pin To Net: NetName=NetLED2A_2 Pin=LED2A-2
+Added Pin To Net: NetName=NetLED2A_2 Pin=U1A-5
+Added Net: Name=NetLED2A_2
+Added Pin To Net: NetName=NetLED2A_3 Pin=LED2A-3
+Added Pin To Net: NetName=NetLED2A_3 Pin=U1A-6
+Added Net: Name=NetLED2A_3
+Added Pin To Net: NetName=NetLED2A_4 Pin=LED2A-4
+Added Pin To Net: NetName=NetLED2A_4 Pin=U1A-7
+Added Net: Name=NetLED2A_4
+Added Pin To Net: NetName=NetLED2B_2 Pin=LED2B-2
+Added Pin To Net: NetName=NetLED2B_2 Pin=U1B-5
+Added Net: Name=NetLED2B_2
+Added Pin To Net: NetName=NetLED2B_3 Pin=LED2B-3
+Added Pin To Net: NetName=NetLED2B_3 Pin=U1B-6
+Added Net: Name=NetLED2B_3
+Added Pin To Net: NetName=NetLED2B_4 Pin=LED2B-4
+Added Pin To Net: NetName=NetLED2B_4 Pin=U1B-7
+Added Net: Name=NetLED2B_4
+Added Pin To Net: NetName=NetLED3A_2 Pin=LED3A-2
+Added Pin To Net: NetName=NetLED3A_2 Pin=U3A-7
+Added Net: Name=NetLED3A_2
+Added Pin To Net: NetName=NetLED3A_3 Pin=LED3A-3
+Added Pin To Net: NetName=NetLED3A_3 Pin=U3A-8
+Added Net: Name=NetLED3A_3
+Added Pin To Net: NetName=NetLED3A_4 Pin=LED3A-4
+Added Pin To Net: NetName=NetLED3A_4 Pin=U3A-9
+Added Net: Name=NetLED3A_4
+Added Pin To Net: NetName=NetLED3B_2 Pin=LED3B-2
+Added Pin To Net: NetName=NetLED3B_2 Pin=U3B-7
+Added Net: Name=NetLED3B_2
+Added Pin To Net: NetName=NetLED3B_3 Pin=LED3B-3
+Added Pin To Net: NetName=NetLED3B_3 Pin=U3B-8
+Added Net: Name=NetLED3B_3
+Added Pin To Net: NetName=NetLED3B_4 Pin=LED3B-4
+Added Pin To Net: NetName=NetLED3B_4 Pin=U3B-9
+Added Net: Name=NetLED3B_4
+Added Pin To Net: NetName=NetLED4A_2 Pin=LED4A-2
+Added Pin To Net: NetName=NetLED4A_2 Pin=U1A-8
+Added Net: Name=NetLED4A_2
+Added Pin To Net: NetName=NetLED4A_3 Pin=LED4A-3
+Added Pin To Net: NetName=NetLED4A_3 Pin=U1A-9
+Added Net: Name=NetLED4A_3
+Added Pin To Net: NetName=NetLED4A_4 Pin=LED4A-4
+Added Pin To Net: NetName=NetLED4A_4 Pin=U1A-10
+Added Net: Name=NetLED4A_4
+Added Pin To Net: NetName=NetLED4B_2 Pin=LED4B-2
+Added Pin To Net: NetName=NetLED4B_2 Pin=U1B-8
+Added Net: Name=NetLED4B_2
+Added Pin To Net: NetName=NetLED4B_3 Pin=LED4B-3
+Added Pin To Net: NetName=NetLED4B_3 Pin=U1B-9
+Added Net: Name=NetLED4B_3
+Added Pin To Net: NetName=NetLED4B_4 Pin=LED4B-4
+Added Pin To Net: NetName=NetLED4B_4 Pin=U1B-10
+Added Net: Name=NetLED4B_4
+Added Pin To Net: NetName=NetLED5A_2 Pin=LED5A-2
+Added Pin To Net: NetName=NetLED5A_2 Pin=U3A-10
+Added Net: Name=NetLED5A_2
+Added Pin To Net: NetName=NetLED5A_3 Pin=LED5A-3
+Added Pin To Net: NetName=NetLED5A_3 Pin=U3A-11
+Added Net: Name=NetLED5A_3
+Added Pin To Net: NetName=NetLED5A_4 Pin=LED5A-4
+Added Pin To Net: NetName=NetLED5A_4 Pin=U3A-12
+Added Net: Name=NetLED5A_4
+Added Pin To Net: NetName=NetLED5B_2 Pin=LED5B-2
+Added Pin To Net: NetName=NetLED5B_2 Pin=U3B-10
+Added Net: Name=NetLED5B_2
+Added Pin To Net: NetName=NetLED5B_3 Pin=LED5B-3
+Added Pin To Net: NetName=NetLED5B_3 Pin=U3B-11
+Added Net: Name=NetLED5B_3
+Added Pin To Net: NetName=NetLED5B_4 Pin=LED5B-4
+Added Pin To Net: NetName=NetLED5B_4 Pin=U3B-12
+Added Net: Name=NetLED5B_4
+Added Pin To Net: NetName=NetLED6A_2 Pin=LED6A-2
+Added Pin To Net: NetName=NetLED6A_2 Pin=U1A-11
+Added Net: Name=NetLED6A_2
+Added Pin To Net: NetName=NetLED6A_3 Pin=LED6A-3
+Added Pin To Net: NetName=NetLED6A_3 Pin=U1A-12
+Added Net: Name=NetLED6A_3
+Added Pin To Net: NetName=NetLED6A_4 Pin=LED6A-4
+Added Pin To Net: NetName=NetLED6A_4 Pin=U2A-5
+Added Net: Name=NetLED6A_4
+Added Pin To Net: NetName=NetLED6B_2 Pin=LED6B-2
+Added Pin To Net: NetName=NetLED6B_2 Pin=U1B-11
+Added Net: Name=NetLED6B_2
+Added Pin To Net: NetName=NetLED6B_3 Pin=LED6B-3
+Added Pin To Net: NetName=NetLED6B_3 Pin=U1B-12
+Added Net: Name=NetLED6B_3
+Added Pin To Net: NetName=NetLED6B_4 Pin=LED6B-4
+Added Pin To Net: NetName=NetLED6B_4 Pin=U2B-5
+Added Net: Name=NetLED6B_4
+Added Pin To Net: NetName=NetLED7A_2 Pin=LED7A-2
+Added Pin To Net: NetName=NetLED7A_2 Pin=U2A-6
+Added Net: Name=NetLED7A_2
+Added Pin To Net: NetName=NetLED7A_3 Pin=LED7A-3
+Added Pin To Net: NetName=NetLED7A_3 Pin=U2A-7
+Added Net: Name=NetLED7A_3
+Added Pin To Net: NetName=NetLED7A_4 Pin=LED7A-4
+Added Pin To Net: NetName=NetLED7A_4 Pin=U2A-8
+Added Net: Name=NetLED7A_4
+Added Pin To Net: NetName=NetLED7B_2 Pin=LED7B-2
+Added Pin To Net: NetName=NetLED7B_2 Pin=U2B-6
+Added Net: Name=NetLED7B_2
+Added Pin To Net: NetName=NetLED7B_3 Pin=LED7B-3
+Added Pin To Net: NetName=NetLED7B_3 Pin=U2B-7
+Added Net: Name=NetLED7B_3
+Added Pin To Net: NetName=NetLED7B_4 Pin=LED7B-4
+Added Pin To Net: NetName=NetLED7B_4 Pin=U2B-8
+Added Net: Name=NetLED7B_4
+Added Pin To Net: NetName=NetLED8A_2 Pin=LED8A-2
+Added Pin To Net: NetName=NetLED8A_2 Pin=U2A-9
+Added Net: Name=NetLED8A_2
+Added Pin To Net: NetName=NetLED8A_3 Pin=LED8A-3
+Added Pin To Net: NetName=NetLED8A_3 Pin=U2A-10
+Added Net: Name=NetLED8A_3
+Added Pin To Net: NetName=NetLED8A_4 Pin=LED8A-4
+Added Pin To Net: NetName=NetLED8A_4 Pin=U2A-11
+Added Net: Name=NetLED8A_4
+Added Pin To Net: NetName=NetLED8B_2 Pin=LED8B-2
+Added Pin To Net: NetName=NetLED8B_2 Pin=U2B-9
+Added Net: Name=NetLED8B_2
+Added Pin To Net: NetName=NetLED8B_3 Pin=LED8B-3
+Added Pin To Net: NetName=NetLED8B_3 Pin=U2B-10
+Added Net: Name=NetLED8B_3
+Added Pin To Net: NetName=NetLED8B_4 Pin=LED8B-4
+Added Pin To Net: NetName=NetLED8B_4 Pin=U2B-11
+Added Net: Name=NetLED8B_4
+Added Pin To Net: NetName=NetR1A_2 Pin=R1A-2
+Added Pin To Net: NetName=NetR1A_2 Pin=U1A-15
+Added Net: Name=NetR1A_2
+Added Pin To Net: NetName=NetR1B_2 Pin=R1B-2
+Added Pin To Net: NetName=NetR1B_2 Pin=U1B-15
+Added Net: Name=NetR1B_2
+Added Pin To Net: NetName=NetR2A_2 Pin=R2A-2
+Added Pin To Net: NetName=NetR2A_2 Pin=U3A-15
+Added Net: Name=NetR2A_2
+Added Pin To Net: NetName=NetR2B_2 Pin=R2B-2
+Added Pin To Net: NetName=NetR2B_2 Pin=U3B-15
+Added Net: Name=NetR2B_2
+Added Pin To Net: NetName=NetR3A_2 Pin=R3A-2
+Added Pin To Net: NetName=NetR3A_2 Pin=U2A-15
+Added Net: Name=NetR3A_2
+Added Pin To Net: NetName=NetR3B_2 Pin=R3B-2
+Added Pin To Net: NetName=NetR3B_2 Pin=U2B-15
+Added Net: Name=NetR3B_2
+Added Pin To Net: NetName=NetU1_49 Pin=U1-49
+Added Pin To Net: NetName=NetU1_49 Pin=U4-20
+Added Net: Name=NetU1_49
+Added Pin To Net: NetName=NetU1_51 Pin=U1-51
+Added Pin To Net: NetName=NetU1_51 Pin=U4-22
+Added Net: Name=NetU1_51
+Added Pin To Net: NetName=NetU1_53 Pin=U1-53
+Added Pin To Net: NetName=NetU1_53 Pin=U4-21
+Added Net: Name=NetU1_53
+Added Pin To Net: NetName=NetU1A_14 Pin=U1A-14
+Added Pin To Net: NetName=NetU1A_14 Pin=U2A-2
+Added Net: Name=NetU1A_14
+Added Pin To Net: NetName=NetU1B_14 Pin=U1B-14
+Added Pin To Net: NetName=NetU1B_14 Pin=U2B-2
+Added Net: Name=NetU1B_14
+Added Pin To Net: NetName=NetU2A_14 Pin=U2A-14
+Added Pin To Net: NetName=NetU2A_14 Pin=U3A-2
+Added Net: Name=NetU2A_14
+Added Pin To Net: NetName=NetU2B_14 Pin=U2B-14
+Added Pin To Net: NetName=NetU2B_14 Pin=U3B-2
+Added Net: Name=NetU2B_14
+Added Pin To Net: NetName=NetU3A_14 Pin=U3A-14
+Added Net: Name=NetU3A_14
+Added Pin To Net: NetName=NSS Pin=U1-32
+Added Pin To Net: NetName=NSS Pin=U4-19
+Added Net: Name=NSS
+Added Class: Name=LED
