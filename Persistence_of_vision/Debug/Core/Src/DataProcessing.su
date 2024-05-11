@@ -1,0 +1,7 @@
+../Core/Src/DataProcessing.c:11:8:updateMeanAndCenterData	24	static
+../Core/Src/DataProcessing.c:21:8:calculateAverageAcceleration	24	static
+../Core/Src/DataProcessing.c:26:8:updateAndFilterVelocity	56	static
+../Core/Src/DataProcessing.c:40:8:updateBaseline	32	static
+../Core/Src/DataProcessing.c:49:6:updateVelocityAndDisplacement	72	static
+../Core/Src/DataProcessing.c:56:6:handleZeroCrossings	40	static
+../Core/Src/DataProcessing.c:70:6:update_motion	80	static

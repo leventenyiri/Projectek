@@ -8,6 +8,7 @@
 #ifndef INC_ASCII_H_
 #define INC_ASCII_H_
 //putting a blank column at the end and start of every character for better readability
+#include <stdint.h>
 uint16_t BLANK[11] = {0};
 
 uint16_t A[11] = { 0x0, 0x1FFF, 0x2080, 0x4080, 0x8080, 0x8080, 0x8080, 0x4080,
