@@ -1,0 +1,11 @@
+../Core/Src/Display.c:10:6:OutputEnable	8	static
+../Core/Src/Display.c:14:6:OutputDisable	8	static
+../Core/Src/Display.c:18:6:LatchEnable	8	static
+../Core/Src/Display.c:22:6:LatchDisable	8	static
+../Core/Src/Display.c:27:6:SendLEDData	24	static
+../Core/Src/Display.c:35:6:CombineLEDData	24	static
+../Core/Src/Display.c:43:6:ShiftLEDData	24	static
+../Core/Src/Display.c:51:6:CombineAndSendNEW	40	static
+../Core/Src/Display.c:139:9:calculateDisplayIndex	56	static
+../Core/Src/Display.c:159:6:sendDisplayData	24	static
+../Core/Src/Display.c:167:6:Display	56	static

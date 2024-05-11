@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <elapsed_time.h>
 #include "DataProcessing.h"
+#include "Display.h"
 #include <inttypes.h>
 /* USER CODE END Includes */
 
@@ -42,9 +43,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
-#define red 5
-#define green 10
 
 /* USER CODE END PD */
 
@@ -58,62 +56,10 @@
 /* USER CODE BEGIN PV */
 LSM6DSL_Object_t MotionSensor;
 volatile uint32_t dataRdyIntReceived;
-
-
-
 volatile uint8_t timer_flag = FALSE;
-volatile LSM6DSL_Axes_t acc_axes;
-volatile int cnt = 0;
-
-typedef struct {
-    double acc_axes_x;
-    int cnt;
-} Data;
-
-typedef struct {
-	double displacement;
-	int cnt;
-} Displacement;
-
-
-#define BUFFER_SIZE 1000
-volatile Data Buffer[BUFFER_SIZE] = {0};
-volatile int read_idx = 0;
-volatile int write_idx = 0;
 uint8_t disp_usable = FALSE;
-
-
-//double abs_velocity = 0;
-
-double k;
-int max_range_index = 55;
-int disp_array_idx = 0;
-
-//Meanhez:
-
-//volatile double runningTotal = 0;
-volatile int count = 0;
-volatile double currentMean = 0;
-
-//double last_acceleration = 0.0;
-double last_velocity = 0.0;
-//double current_velocity = 0.0;
-
-
-
-
-double filtered_velocity = 0;
-
-int range_index = 0;
-
-double start_point = 0.0;
-uint8_t last_direction = 0;
-
 uint8_t first_positive_velocity_detected = FALSE;
-const double VELOCITY_THRESHOLD = 10000.0;
 
-volatile int write_cnt = 0;
-volatile int read_cnt = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -124,10 +70,6 @@ static void MEMS_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-
-
-
 
 uint8_t LED_CLEAR[6] = { 0 };
 uint8_t LED_0[6] = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
@@ -230,143 +172,6 @@ uint8_t LED_ARRAY[48][6] = {
 		{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x80 }  // LED_47
 };
 
-	/* for example: A:
-	 *  0 1 1 1 0
-	 	1 0 0 0 1
-	    1 0 0 0 1
-	    1 1 1 1 1
-	    1 0 0 0 1
-	    1 0 0 0 1
-	    0 0 0 0 0
-	    0 0 0 0 0
-
-	 would look like this, now i write each column into a vector, and i will light up these leds
-	 with a delay to display the character
-	 */
-
-void OutputEnable(void) {
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_RESET); // Set PB2 low to enable output
-}
-
-void OutputDisable(void) {
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_SET); // Set PB2 high to disable output
-}
-
-void LatchEnable(void) {
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);   // Set PB1 high
-}
-
-
-void SendLEDData(uint8_t *data) {
-	for (int i = 5; i >= 0; i--) {  // Loop through data array backward
-		HAL_SPI_Transmit(&hspi2, &data[i], 1, 100);  // Send 1 byte per driver
-	}
-}
-
-void CombineLEDData(uint8_t *result, uint8_t ledIdx) {
-
-	for (int j = 0; j < 6; j++) {   // Each LED configuration is 6 bytes
-		result[j] |= LED_ARRAY[ledIdx][j];
-	}
-
-}
-
-void ShiftLEDData(uint8_t *result, uint8_t ledIdx) {
-
-	for (int j = 0; j < 6; j++) {
-		result[j] += LED_ARRAY[ledIdx][j];
-	}
-
-}
-
-void CombineAndSendNEW(uint16_t ledMask,uint8_t color) {
-
-
-	//if the value of a variable is 1, concatenate that LED into the sum
-	char a = (ledMask & 0b1000000000000000) >> 15;
-	char b = (ledMask & 0b0100000000000000) >> 14;
-	char c = (ledMask & 0b0010000000000000) >> 13;
-	char d = (ledMask & 0b0001000000000000) >> 12;
-	char e = (ledMask & 0b0000100000000000) >> 11;
-	char f = (ledMask & 0b0000010000000000) >> 10;
-	char g = (ledMask & 0b0000001000000000) >> 9;
-	char h = (ledMask & 0b0000000100000000) >> 8;
-	char i = (ledMask & 0b0000000010000000) >> 7;
-	char j = (ledMask & 0b0000000001000000) >> 6;
-	char k = (ledMask & 0b0000000000100000) >> 5;
-	char l = (ledMask & 0b0000000000010000) >> 4;
-	char m = (ledMask & 0b0000000000001000) >> 3;
-	char n = (ledMask & 0b0000000000000100) >> 2;
-	char o = (ledMask & 0b0000000000000010) >> 1;
-	char p = (ledMask & 0b0000000000000001);
-
-	uint8_t LED[6] = { 0 };
-/*
-	if(color == red){
-
-		for (int j = 0; j < 6; j++) {   // Each LED configuration is 6 bytes
-				LED[j] |= 1;
-			}
-	}
-
-	if(color == green){
-		CombineLEDData(LED,green);
-	}
-*/
-
-	if (a) {
-		CombineLEDData(LED, 0);
-	}
-	if (b) {
-		CombineLEDData(LED, 3);
-	}
-	if (c) {
-		CombineLEDData(LED, 6);
-	}
-	if (d) {
-		CombineLEDData(LED, 9);
-	}
-	if (e) {
-		CombineLEDData(LED, 12);
-	}
-	if (f) {
-		CombineLEDData(LED, 15);
-	}
-	if (g) {
-		CombineLEDData(LED, 18);
-	}
-	if (h) {
-		CombineLEDData(LED, 21);
-	}
-	if (i) {
-		CombineLEDData(LED, 24);
-	}
-	if (j) {
-		CombineLEDData(LED, 27);
-	}
-	if (k) {
-		CombineLEDData(LED, 30);
-	}
-	if (l) {
-		CombineLEDData(LED, 33);
-	}
-	if (m) {
-		CombineLEDData(LED, 36);
-	}
-	if (n) {
-		CombineLEDData(LED, 39);
-	}
-	if (o) {
-		CombineLEDData(LED, 42);
-	}
-	if (p) {
-		CombineLEDData(LED, 45);
-	}
-
-	SendLEDData(LED);
-
-}
-
 int32_t wrap_platform_read(uint8_t Address, uint8_t Reg, uint8_t *Bufp,
 		uint16_t len) {
 	Reg |= 0x80;
@@ -386,73 +191,12 @@ int32_t wrap_platform_write(uint8_t Address, uint8_t Reg, uint8_t *Bufp,
 	return 0;
 }
 
-int calculateDisplayIndex(double displacement, double max_displacement) {
-    double k = max_displacement / 154.0; // Total range divided into 90 segments (77 each way)
-    int range_index;
 
-    // Calculate relative displacement from the current start point
-    double relative_displacement = displacement - start_point;
-
-    if (last_direction == 0) { // Forward motion
-        range_index = (int)(relative_displacement / k);
-    } else { // Backward motion
-        range_index = 77 - (int)(relative_displacement / k);  // Reverse index for backward motion
-    }
-
-    // Clamping the range index to allowed values
-    if (range_index < 0) range_index = 0;
-    if (range_index > 77) range_index = 77;  // Clamp to max index for 45 segments
-
-    return range_index;
-}
-
-void sendDisplayData(uint16_t (*ASCII)[11], int index) {
-    int disp_array_idx = index / 11;
-    int send_index = index % 11;
-
-    CombineAndSendNEW(ASCII[disp_array_idx][send_index], red);
-
-}
-
-void Display(uint16_t (*ASCII)[11], double max_displacement, double centered_velocity, double current_displacement) {
-    // Check and handle velocity zero crossing
-
-    uint8_t current_direction = (centered_velocity > 0) ? 0 : 1;  // 0 for positive, 1 for negative
-    if (current_direction != last_direction) {
-        start_point = current_displacement;
-        last_direction = current_direction;
-    }
-
-    // Calculate the index for display based on the updated start point and current displacement
-    range_index = calculateDisplayIndex(current_displacement, max_displacement);
-
-    // Send the character data corresponding to the calculated index to the display
-    sendDisplayData(ASCII, range_index);
-
-}
-
-
-
-
-void updateBuffer(double acc_data, int index) {
-    Buffer[index].acc_axes_x = updateMeanAndCenterData(acc_data);
-    Buffer[index].cnt = cnt;
-    write_idx = (write_idx + 1) % BUFFER_SIZE;  // Update write index for circular buffering
-    cnt++;
-}
 
 // Timer interrupt callback function
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if (htim->Instance == TIM2) {
-    	//elapsed_time_start(1);
-
-
-        // Update the buffer with the new accelerometer data
-        //updateBuffer((double) acc_axes.x, write_idx);
-
-        // Set flag to indicate new data is available or some other processing needs to be done
         timer_flag = TRUE;
-        //elapsed_time_stop(1);
     }
 }
 
@@ -517,6 +261,8 @@ int main(void)
 
   double centered_velocity = 0.0;
 
+  double start_point = 0.0;
+
   uint16_t ASCII_ARRAY[7][11];
 
 	for (int i = 0; i < 7; i++) {
@@ -561,7 +307,7 @@ int main(void)
 			acc_cnt++;
 
 			if (disp_usable) {
-				Display(ASCII_ARRAY, max_displacement, centered_velocity, current_displacement);
+				Display(ASCII_ARRAY, max_displacement, centered_velocity, current_displacement,&start_point);
 			}
 
 
