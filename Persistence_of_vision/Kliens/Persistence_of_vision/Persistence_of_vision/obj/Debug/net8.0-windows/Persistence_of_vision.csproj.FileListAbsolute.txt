@@ -1,0 +1,16 @@
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\obj\Debug\net8.0-windows\Persistence_of_vision.MainForm.resources
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\obj\Debug\net8.0-windows\Persistence_of_vision.csproj.GenerateResource.cache
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\obj\Debug\net8.0-windows\Persistence_of_vision.GeneratedMSBuildEditorConfig.editorconfig
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\obj\Debug\net8.0-windows\Persistence_of_vision.AssemblyInfoInputs.cache
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\obj\Debug\net8.0-windows\Persistence_of_vision.AssemblyInfo.cs
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\obj\Debug\net8.0-windows\Persistence_of_vision.csproj.CoreCompileInputs.cache
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\bin\Debug\net8.0-windows\Persistence_of_vision.exe
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\bin\Debug\net8.0-windows\Persistence_of_vision.deps.json
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\bin\Debug\net8.0-windows\Persistence_of_vision.runtimeconfig.json
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\bin\Debug\net8.0-windows\Persistence_of_vision.dll
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\bin\Debug\net8.0-windows\Persistence_of_vision.pdb
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\obj\Debug\net8.0-windows\Persistence_of_vision.dll
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\obj\Debug\net8.0-windows\refint\Persistence_of_vision.dll
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\obj\Debug\net8.0-windows\Persistence_of_vision.pdb
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\obj\Debug\net8.0-windows\Persistence_of_vision.genruntimeconfig.cache
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\obj\Debug\net8.0-windows\ref\Persistence_of_vision.dll
