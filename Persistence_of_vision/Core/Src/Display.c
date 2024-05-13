@@ -137,7 +137,7 @@ void CombineAndSendNEW(uint16_t ledMask,uint8_t color) {
 }
 
 uint8_t calculateDisplayIndex(double displacement, double max_displacement, double* start_point, uint8_t last_direction) {
-    double k = max_displacement / 154.0; // Total range divided into 90 segments (77 each way)
+    double k = max_displacement / 128.0; // Total range divided into 110 segments (64 each way)
     uint8_t range_index;
 
     // Calculate relative displacement from the current start point
@@ -146,25 +146,25 @@ uint8_t calculateDisplayIndex(double displacement, double max_displacement, doub
     if (last_direction == 0) { // Forward motion
         range_index = (int)(relative_displacement / k);
     } else { // Backward motion
-        range_index = 77 - (int)(relative_displacement / k);  // Reverse index for backward motion
+        range_index = 64 - (int)(relative_displacement / k);  // Reverse index for backward motion
     }
 
     // Clamping the range index to allowed values
     if (range_index < 0) range_index = 0;
-    if (range_index > 77) range_index = 77;  // Clamp to max index for 45 segments
+    if (range_index > 64) range_index = 64;  // Clamp to max index for 110 segments
 
     return range_index;
 }
 
-void sendDisplayData(uint16_t (*ASCII)[11], int index) {
-    int disp_array_idx = index / 11;
-    int send_index = index % 11;
+/*void sendDisplayData(uint16_t TEST_ARRAY[55], int index) {
+    //int disp_array_idx = index / 11;
+    //int send_index = index % 11;
 
-    CombineAndSendNEW(ASCII[disp_array_idx][send_index], red);
+    CombineAndSendNEW(TEST_ARRAY[index], red);
 
-}
+}*/
 
-void Display(uint16_t (*ASCII)[11], double max_displacement, double centered_velocity, double current_displacement, double* start_point) {
+void Display(uint16_t TEST_ARRAY[64], double max_displacement, double centered_velocity, double current_displacement, double* start_point) {
     // Check and handle velocity zero crossing
 	static uint8_t last_direction = 0;
 	uint8_t range_index;
@@ -178,6 +178,7 @@ void Display(uint16_t (*ASCII)[11], double max_displacement, double centered_vel
     range_index = calculateDisplayIndex(current_displacement, max_displacement, start_point, last_direction);
 
     // Send the character data corresponding to the calculated index to the display
-    sendDisplayData(ASCII, range_index);
+    CombineAndSendNEW(TEST_ARRAY[range_index], red);
+    //sendDisplayData(TEST_ARRAY, range_index);
 
 }

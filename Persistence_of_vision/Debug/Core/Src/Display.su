@@ -7,5 +7,4 @@
 ../Core/Src/Display.c:43:6:ShiftLEDData	24	static
 ../Core/Src/Display.c:51:6:CombineAndSendNEW	40	static
 ../Core/Src/Display.c:139:9:calculateDisplayIndex	56	static
-../Core/Src/Display.c:159:6:sendDisplayData	24	static
 ../Core/Src/Display.c:167:6:Display	56	static

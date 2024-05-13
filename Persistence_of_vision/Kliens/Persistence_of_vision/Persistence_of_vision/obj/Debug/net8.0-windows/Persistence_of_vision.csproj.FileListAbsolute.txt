@@ -14,3 +14,13 @@ C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\obj\
 C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\obj\Debug\net8.0-windows\Persistence_of_vision.pdb
 C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\obj\Debug\net8.0-windows\Persistence_of_vision.genruntimeconfig.cache
 C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\obj\Debug\net8.0-windows\ref\Persistence_of_vision.dll
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\bin\Debug\net8.0-windows\System.IO.Ports.dll
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\bin\Debug\net8.0-windows\runtimes\linux-arm\native\libSystem.IO.Ports.Native.so
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\bin\Debug\net8.0-windows\runtimes\linux-arm64\native\libSystem.IO.Ports.Native.so
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\bin\Debug\net8.0-windows\runtimes\linux-x64\native\libSystem.IO.Ports.Native.so
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\bin\Debug\net8.0-windows\runtimes\osx-arm64\native\libSystem.IO.Ports.Native.dylib
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\bin\Debug\net8.0-windows\runtimes\osx-x64\native\libSystem.IO.Ports.Native.dylib
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\bin\Debug\net8.0-windows\runtimes\unix\lib\net8.0\System.IO.Ports.dll
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.IO.Ports.dll
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\obj\Debug\net8.0-windows\Persistence_of_vision.csproj.AssemblyReference.cache
+C:\Mikrokontroller_labor\Kliens\Persistence_of_vision\Persistence_of_vision\obj\Debug\net8.0-windows\Persiste.87587D81.Up2Date

@@ -1,11 +1,14 @@
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.IO.Ports;
+using System.IO;
 
 namespace Persistence_of_vision
 {
     public partial class MainForm : Form
     {
         private ushort[] columns = new ushort[64];
+        private ushort[] columns_output = new ushort[64];
         private Bitmap bitmap = new Bitmap(64, 16);
         private bool newFlag;
         private bool clearFlag;
@@ -24,6 +27,9 @@ namespace Persistence_of_vision
         private int mouseX;
         private int mouseY;
         private Rectangle invalidateRect;
+        private bool button;
+        private SerialPort serialPort;
+        private int sendcnt = 0;
         //private Button sendButton = new Button();
         public MainForm()
         {
@@ -36,7 +42,13 @@ namespace Persistence_of_vision
             this.button1.Click += button1_Click; ;
             this.MouseClick += Click_Handler;
             this.MouseMove += Click_Handler;
+            SetupSerialPort();
 
+        }
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+            CloseSerialPort();  // Ensure the port is closed when the form is closing
         }
 
         private void Click_Handler(object? sender, MouseEventArgs e)
@@ -123,6 +135,7 @@ namespace Persistence_of_vision
                 for(int i=0; i<columns.Length; i++)
                 {
                     columns[i] = 0;
+                    columns_output[i] = 0;
                 }
                 clickFlag = false;
                 clearFlag = false;
@@ -164,7 +177,54 @@ namespace Persistence_of_vision
 
         private void button1_Click(object sender, EventArgs e)
         {
+            for (int i = 0; i < columns.Length; i++)
+            {
+                columns_output[i] = ReverseBits(columns[i]);
+            }
 
+            if (serialPort != null && serialPort.IsOpen)
+            {
+                foreach (ushort data in columns_output)
+                {
+                    byte[] buffer = BitConverter.GetBytes(data);
+                    if (BitConverter.IsLittleEndian)
+                        Array.Reverse(buffer); // Ensure big-endian format if needed
+                    serialPort.Write(buffer, 0, buffer.Length); // Send the data
+                    sendcnt++;
+                }
+            }
+            //button = true;
+
+        }
+
+        public ushort ReverseBits(ushort value)
+        {
+            ushort result = 0;
+            ushort mask = 1;
+            for (int i = 0; i < 16; i++)
+            {
+                result <<= 1; // Shift result to the left to make room for the next bit
+                if ((value & mask) != 0) // Check if the least significant bit is set
+                {
+                    result |= 1; // Set the least significant bit of result
+                }
+                value >>= 1; // Shift value to the right to process the next bit
+            }
+            return result;
+        }
+
+        private void SetupSerialPort()
+        {
+            serialPort = new SerialPort("COM17", 115200, Parity.None, 8, StopBits.One);
+            serialPort.Open();  // Open the serial port
+        }
+
+        private void CloseSerialPort()
+        {
+            if (serialPort != null && serialPort.IsOpen)
+            {
+                serialPort.Close();  // Close the serial port when done
+            }
         }
     }
 }

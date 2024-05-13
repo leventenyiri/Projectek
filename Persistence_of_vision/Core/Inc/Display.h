@@ -95,7 +95,7 @@ void ShiftLEDData(uint8_t *result, uint8_t ledIdx);
 void CombineAndSendNEW(uint16_t ledMask,uint8_t color);
 uint8_t calculateDisplayIndex(double displacement, double max_displacement, double* start_point, uint8_t last_direction);
 void sendDisplayData(uint16_t (*ASCII)[11], int index);
-void Display(uint16_t (*ASCII)[11], double max_displacement, double centered_velocity, double current_displacement, double* start_point);
+void Display(uint16_t TEST_ARRAY[55], double max_displacement, double centered_velocity, double current_displacement, double* start_point);
 
 
 #endif /* INC_DISPLAY_H_ */

@@ -7,7 +7,7 @@
       "RelativeMoniker": "D:0:0:{B2594D0D-E88B-44CC-8CD4-966C49738AC9}|Persistence_of_vision\\Persistence_of_vision.csproj|solutionrelative:persistence_of_vision\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B2594D0D-E88B-44CC-8CD4-966C49738AC9}|Persistence_of_vision\\Persistence_of_vision.csproj|c:\\mikrokontroller_labor\\kliens\\persistence_of_vision\\persistence_of_vision\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{B2594D0D-E88B-44CC-8CD4-966C49738AC9}|Persistence_of_vision\\Persistence_of_vision.csproj|C:\\Mikrokontroller_labor\\Kliens\\Persistence_of_vision\\persistence_of_vision\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{B2594D0D-E88B-44CC-8CD4-966C49738AC9}|Persistence_of_vision\\Persistence_of_vision.csproj|solutionrelative:persistence_of_vision\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     }
   ],
@@ -28,9 +28,9 @@
               "RelativeDocumentMoniker": "Persistence_of_vision\\MainForm.cs",
               "ToolTip": "C:\\Mikrokontroller_labor\\Kliens\\Persistence_of_vision\\Persistence_of_vision\\MainForm.cs",
               "RelativeToolTip": "Persistence_of_vision\\MainForm.cs",
-              "ViewState": "AQIAADQAAAAAAAAAAAAwwEIAAAAYAAAA",
+              "ViewState": "AQIAALMAAAAAAAAAAAAswL8AAAAUAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-12T16:00:55.12Z",
+              "WhenOpened": "2024-05-13T09:48:00.004Z",
               "EditorCaption": ""
             },
             {
@@ -42,8 +42,7 @@
               "ToolTip": "C:\\Mikrokontroller_labor\\Kliens\\Persistence_of_vision\\Persistence_of_vision\\MainForm.cs [Design]",
               "RelativeToolTip": "Persistence_of_vision\\MainForm.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-12T15:48:20.072Z",
-              "EditorCaption": " [Design]"
+              "WhenOpened": "2024-05-13T09:47:55.73Z"
             }
           ]
         }

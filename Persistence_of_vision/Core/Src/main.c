@@ -43,7 +43,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+void UART_Callback(UART_HandleTypeDef *huart);
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -57,9 +57,17 @@
 LSM6DSL_Object_t MotionSensor;
 volatile uint32_t dataRdyIntReceived;
 volatile uint8_t timer_flag = FALSE;
+volatile uint8_t rx_cnt = 0;
+volatile uint16_t tmp = 0;
+volatile uint16_t BUFFER_ARRAY1[64] = {0};
+volatile uint16_t BUFFER_ARRAY2[64] = {0};
+volatile uint16_t* read_ptr = BUFFER_ARRAY2;
+volatile uint16_t* write_ptr = BUFFER_ARRAY1;
+volatile uint8_t buffer_ready = FALSE;
 uint8_t disp_usable = FALSE;
 uint8_t first_positive_velocity_detected = FALSE;
 
+uint8_t rx_buffer[1];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -211,7 +219,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-  elapsed_time_init();
+ elapsed_time_init();
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -263,9 +271,9 @@ int main(void)
 
   double start_point = 0.0;
 
-  uint16_t ASCII_ARRAY[7][11];
+  uint16_t ASCII_ARRAY[5][11];
 
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 11; j++) {
 
 			if (i == 0)
@@ -275,39 +283,60 @@ int main(void)
 			if (i == 2)
 				ASCII_ARRAY[i][j] = R[j];
 			if (i == 3)
-				ASCII_ARRAY[i][j] = I[j];
-			if (i == 4)
-				ASCII_ARRAY[i][j] = K[j];
-			if (i == 5)
 				ASCII_ARRAY[i][j] = A[j];
-			if (i == 6)
+			if (i == 4)
 				ASCII_ARRAY[i][j] = 0;
 			}
 	}
 
 
+  uint16_t TEST_ARRAY[64] = {0x0,0x0, 0x0, 0x0, 0x0, 0x0,0x0, 0x0, 0x0, 0x0, 0x0,0x0, 0xFFFF, 0xFFFF, 0xC183, 0xC183, 0xC183, 0xC183, 0xC183,
+			0xC183, 0xC183, 0x0, 0x0, 0xFFFF, 0xFFFF, 0xC3C0, 0xC360, 0xC330, 0xC318, 0x660C,
+			0x3C06, 0x1803, 0x0, 0x0, 0x1FFF, 0x2080, 0x4080, 0x8080, 0x8080, 0x8080, 0x4080,
+			0x2080, 0x1FFF, 0x0,0x0, 0x0, 0x0, 0x0, 0x0,0x0, 0x0, 0x0, 0x0, 0x0, 0x0,0x0, 0x0, 0x0, 0x0, 0x0,0x0, 0x0, 0x0, 0x0};
+
+
+  //uint16_t* read_ptr = null;
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  HAL_UART_RegisterCallback(&huart2, HAL_UART_RX_COMPLETE_CB_ID, UART_Callback);
+  HAL_UART_Receive_IT(&huart2,rx_buffer,1);
 	while (1) {
+
+		if(buffer_ready)
+		{
+			if(read_ptr == BUFFER_ARRAY2)
+			{
+				//memset(BUFFER_ARRAY2, 0, sizeof(BUFFER_ARRAY2));
+				read_ptr = BUFFER_ARRAY1;
+				write_ptr = BUFFER_ARRAY2;
+			}
+
+			else if(read_ptr == BUFFER_ARRAY1){
+				//memset(BUFFER_ARRAY1, 0, sizeof(BUFFER_ARRAY2));
+				read_ptr = BUFFER_ARRAY2;
+				write_ptr = BUFFER_ARRAY1;
+			}
+
+
+			buffer_ready = FALSE;
+		}
 
 
 		if (timer_flag == TRUE) {
 
 			elapsed_time_start(0);
-
 			LSM6DSL_ACC_GetAxes(&MotionSensor, &acc_axes); // Get new accelerometer data
-
-			//overflow_check();
 
 			update_motion(updateMeanAndCenterData(acc_axes.x), acc_cnt,1,&zeroCrossing, &current_displacement, &max_displacement, &centered_velocity);
 
 			acc_cnt++;
 
-			if (disp_usable) {
-				Display(ASCII_ARRAY, max_displacement, centered_velocity, current_displacement,&start_point);
+			if (disp_usable || read_ptr != NULL) {
+				Display(read_ptr, max_displacement, centered_velocity, current_displacement,&start_point);
 			}
 
 
@@ -431,6 +460,33 @@ int _write(int fd, char * ptr, int len)
 {
   HAL_UART_Transmit(&huart2, (uint8_t *) ptr, len, HAL_MAX_DELAY);
   return len;
+}
+
+void UART_Callback(UART_HandleTypeDef *huart)
+{
+	//HAL_UART_Transmit(&huart2,rx_buffer,1,300);
+	HAL_UART_Receive_IT(&huart2,rx_buffer,1);
+
+
+	if(rx_cnt % 2 == 1)
+	{
+		tmp = tmp <<8;
+		tmp |= rx_buffer[0];
+		write_ptr[(rx_cnt/2)] = tmp;
+		tmp = 0;
+	}
+
+	//if(rx_cnt<=128)
+	rx_cnt++;
+
+	tmp = rx_buffer[0];
+
+	if(rx_cnt == 128)
+	{
+		buffer_ready = TRUE;
+		rx_cnt = 0;
+		tmp = 0;
+	}
 }
 /* USER CODE END 4 */
 

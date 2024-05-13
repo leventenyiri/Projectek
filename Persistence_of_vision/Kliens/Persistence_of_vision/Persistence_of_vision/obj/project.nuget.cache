@@ -1,8 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "ERkRdSNQR+fBaKK2O0HJXkUNHuIfTMEACT+pcbHFxyGhCRz/MnBrJ8QmmcDV1Ul5EpMZlVrBJxxSnAlAyou3gw==",
+  "dgSpecHash": "bKa2ilTAALwh0SkHSdTRNhQbZBDajP7LRxr11KIql+wZ3OlzRUVkFrk/G7kIAX3OqxPxA4XHobQRsFFT8ij/Xw==",
   "success": true,
   "projectFilePath": "C:\\Mikrokontroller_labor\\Kliens\\Persistence_of_vision\\Persistence_of_vision\\Persistence_of_vision.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\nyiri\\.nuget\\packages\\runtime.linux-arm.runtime.native.system.io.ports\\8.0.0\\runtime.linux-arm.runtime.native.system.io.ports.8.0.0.nupkg.sha512",
+    "C:\\Users\\nyiri\\.nuget\\packages\\runtime.linux-arm64.runtime.native.system.io.ports\\8.0.0\\runtime.linux-arm64.runtime.native.system.io.ports.8.0.0.nupkg.sha512",
+    "C:\\Users\\nyiri\\.nuget\\packages\\runtime.linux-x64.runtime.native.system.io.ports\\8.0.0\\runtime.linux-x64.runtime.native.system.io.ports.8.0.0.nupkg.sha512",
+    "C:\\Users\\nyiri\\.nuget\\packages\\runtime.native.system.io.ports\\8.0.0\\runtime.native.system.io.ports.8.0.0.nupkg.sha512",
+    "C:\\Users\\nyiri\\.nuget\\packages\\runtime.osx-arm64.runtime.native.system.io.ports\\8.0.0\\runtime.osx-arm64.runtime.native.system.io.ports.8.0.0.nupkg.sha512",
+    "C:\\Users\\nyiri\\.nuget\\packages\\runtime.osx-x64.runtime.native.system.io.ports\\8.0.0\\runtime.osx-x64.runtime.native.system.io.ports.8.0.0.nupkg.sha512",
+    "C:\\Users\\nyiri\\.nuget\\packages\\system.io.ports\\8.0.0\\system.io.ports.8.0.0.nupkg.sha512"
+  ],
   "logs": []
 }
