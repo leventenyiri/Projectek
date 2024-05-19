@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IotGUI", "IotGUI.csproj", "{1D699F59-3569-4025-9FF6-03FB323F3051}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1D699F59-3569-4025-9FF6-03FB323F3051}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D699F59-3569-4025-9FF6-03FB323F3051}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D699F59-3569-4025-9FF6-03FB323F3051}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D699F59-3569-4025-9FF6-03FB323F3051}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9E6A902F-9A12-4E8B-BB43-7C6A315F4E7D}
+	EndGlobalSection
+EndGlobal
