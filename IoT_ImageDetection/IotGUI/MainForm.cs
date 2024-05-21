@@ -48,8 +48,8 @@ namespace IotGUI
 
         public async Task ImageProcessing()
         {
-            string endpoint = "https://computer-vision-demo-karimi.cognitiveservices.azure.com/";
-            string subscriptionKey = "47ece2c929af4236b3f3a48ecdce1436";
+            string endpoint = "*********";
+            string subscriptionKey = "*********";
             string imageUrl = "http://192.168.68.110/capture";
 
             var credentials = new ApiKeyServiceClientCredentials(subscriptionKey);
