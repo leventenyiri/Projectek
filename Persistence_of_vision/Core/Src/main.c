@@ -255,7 +255,7 @@ int main(void)
 
   HAL_TIM_Base_Start_IT(&htim2);
 
-  //LatchEnable();
+  LatchEnable();
 
   LSM6DSL_Axes_t acc_axes;
 
@@ -270,6 +270,30 @@ int main(void)
   double centered_velocity = 0.0;
 
   double start_point = 0.0;
+
+  uint16_t ASCII_ARRAY[5][11];
+
+	for (int i = 0; i < 5; i++) {
+		for (int j = 0; j < 11; j++) {
+
+			if (i == 0)
+				ASCII_ARRAY[i][j] = 0;
+			if (i == 1)
+				ASCII_ARRAY[i][j] = E[j];
+			if (i == 2)
+				ASCII_ARRAY[i][j] = R[j];
+			if (i == 3)
+				ASCII_ARRAY[i][j] = A[j];
+			if (i == 4)
+				ASCII_ARRAY[i][j] = 0;
+			}
+	}
+
+
+  uint16_t TEST_ARRAY[64] = {0x0,0x0, 0x0, 0x0, 0x0, 0x0,0x0, 0x0, 0x0, 0x0, 0x0,0x0, 0xFFFF, 0xFFFF, 0xC183, 0xC183, 0xC183, 0xC183, 0xC183,
+			0xC183, 0xC183, 0x0, 0x0, 0xFFFF, 0xFFFF, 0xC3C0, 0xC360, 0xC330, 0xC318, 0x660C,
+			0x3C06, 0x1803, 0x0, 0x0, 0x1FFF, 0x2080, 0x4080, 0x8080, 0x8080, 0x8080, 0x4080,
+			0x2080, 0x1FFF, 0x0,0x0, 0x0, 0x0, 0x0, 0x0,0x0, 0x0, 0x0, 0x0, 0x0, 0x0,0x0, 0x0, 0x0, 0x0, 0x0,0x0, 0x0, 0x0, 0x0};
 
 
   //uint16_t* read_ptr = null;
@@ -412,7 +436,7 @@ static void MEMS_Init(void)
   LSM6DSL_Init(&MotionSensor);
 
   /* Configure the LSM6DSL accelerometer (ODR, scale and interrupt) */
-  LSM6DSL_ACC_SetOutputDataRate(&MotionSensor, 1660.0f); /* 1660 Hz */
+  LSM6DSL_ACC_SetOutputDataRate(&MotionSensor, 1660.0f); /* 3330 Hz */
   LSM6DSL_ACC_SetFullScale(&MotionSensor, 8);          /* [-4000mg; +4000mg]  old*/
   LSM6DSL_ACC_Set_INT1_DRDY(&MotionSensor, ENABLE);    /* Enable DRDY */
   LSM6DSL_ACC_GetAxesRaw(&MotionSensor, &axes);        /* Clear DRDY */
